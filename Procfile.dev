@@ -3,3 +3,5 @@ css: yarn build:css --watch
 js: yarn build --reload
 
 # docker: docker-compose up
+worker: bundle exec rake solid_queue:start
+stripe: stripe listen --forward-to localhost:3000/webhooks/stripe

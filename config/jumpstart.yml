@@ -1,0 +1,20 @@
+---
+application_name: Canine
+business_name: Canine
+business_address: 
+domain: trycanine.com
+support_email: support@trycanine.com
+default_from_email: Canine <no-reply@trycanine.com>
+background_job_processor: solid_queue
+email_provider: 
+personal_accounts: true
+apns: false
+fcm: false
+integrations:
+omniauth_providers:
+- github
+payment_processors:
+- stripe
+multitenancy:
+gems:
+- oj
