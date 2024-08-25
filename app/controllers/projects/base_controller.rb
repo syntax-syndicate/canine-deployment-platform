@@ -1,4 +1,5 @@
 class Projects::BaseController < ApplicationController
+  include ProjectsHelper
   before_action :set_project
 
   private

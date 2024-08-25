@@ -1,21 +1,19 @@
-<div id="<%= dom_id project %>">
-  <div class="mb-4">
-    <p class="text-sm font-medium text-gray-500">Name</p>
-    <%= project.name %>
-  </div>
-  <div class="mb-4">
-    <p class="text-sm font-medium text-gray-500">Repository url</p>
-    <%= project.repository_url %>
-  </div>
-  <div class="mb-4">
-    <p class="text-sm font-medium text-gray-500">Branch</p>
-    <%= project.branch %>
-  </div>
-  <div class="mb-4">
-    <p class="text-sm font-medium text-gray-500">Cluster</p>
-    <%= project.cluster_id %>
-  </div>
-  <% if action_name != "show" %>
-    <%= link_to "View this project", project, class: "btn btn-secondary" %>
+<!-- Main content -->
+<div class="flex-1 p-4">
+  <h2 class="text-2xl font-bold mb-4">Events</h2>
+  
+  <ul class="space-y-4">
+    <% project.deployments.order(created_at: :desc).limit(5).each do |deployment| %>
+      <li class="border-b pb-2">
+        <div class="font-semibold"><%= deployment.status.titleize %></div>
+        <div class="text-sm text-gray-600">
+          Deployed at: <%= deployment.created_at.strftime('%Y-%m-%d %H:%M:%S') %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+  
+  <% if project.deployments.count > 5 %>
+    <%= link_to "View all deployments", project_deployments_path(project), class: "mt-4 text-blue-600 hover:underline" %>
   <% end %>
 </div>

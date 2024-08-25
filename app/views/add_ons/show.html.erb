@@ -1,0 +1,17 @@
+<%= content_for :title, "Add Ons ##{@add_on.id}" %>
+<%= turbo_stream_from @add_on %>
+
+<div class="container px-4 mx-auto my-8">
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="h3">
+      <%= link_to "Add Ons", add_ons_path, class: "text-black dark:text-white" %>
+      <span class="text-gray-400 font-light mx-2">\</span>
+      Add On #<%= @add_on.id %>
+    </h1>
+    <%= link_to t("edit"), edit_add_on_path(@add_on), class: "btn btn-secondary" %>
+  </div>
+
+  <div class="p-8 bg-white dark:bg-gray-900 dark:border dark:border-gray-700 rounded shadow">
+    <%= render @add_on %>
+  </div>
+</div>

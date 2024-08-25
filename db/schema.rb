@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_24_211821) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_25_063406) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -96,6 +96,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_24_211821) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "add_ons", force: :cascade do |t|
+    t.bigint "cluster_id", null: false
+    t.integer "add_on_type", null: false
+    t.string "name", null: false
+    t.integer "status", default: 0, null: false
+    t.jsonb "metadata", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cluster_id"], name: "index_add_ons_on_cluster_id"
+  end
+
   create_table "addresses", force: :cascade do |t|
     t.string "addressable_type", null: false
     t.bigint "addressable_id", null: false
@@ -168,6 +179,24 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_24_211821) do
     t.index ["owner_id", "owner_type"], name: "index_connected_accounts_on_owner_id_and_owner_type"
   end
 
+  create_table "deployments", force: :cascade do |t|
+    t.bigint "project_id", null: false
+    t.bigint "build_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["build_id"], name: "index_deployments_on_build_id"
+    t.index ["project_id"], name: "index_deployments_on_project_id"
+  end
+
+  create_table "deploys", force: :cascade do |t|
+    t.bigint "project_id", null: false
+    t.bigint "build_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["build_id"], name: "index_deploys_on_build_id"
+    t.index ["project_id"], name: "index_deploys_on_project_id"
+  end
+
   create_table "domains", force: :cascade do |t|
     t.bigint "project_id", null: false
     t.string "domain_name", null: false
@@ -189,6 +218,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_24_211821) do
   create_table "inbound_webhooks", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.text "body"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "log_outputs", force: :cascade do |t|
+    t.bigint "loggable_id", null: false
+    t.string "loggable_type", null: false
+    t.text "output"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -357,6 +394,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_24_211821) do
     t.string "contact_url"
   end
 
+  create_table "project_add_ons", force: :cascade do |t|
+    t.bigint "project_id", null: false
+    t.bigint "add_on_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["add_on_id"], name: "index_project_add_ons_on_add_on_id"
+    t.index ["project_id"], name: "index_project_add_ons_on_project_id"
+  end
+
   create_table "projects", force: :cascade do |t|
     t.string "name", null: false
     t.string "repository_url", null: false
@@ -368,6 +414,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_24_211821) do
     t.string "docker_command"
     t.string "predeploy_command"
     t.string "container_registry", null: false
+    t.integer "status", default: 0, null: false
+    t.integer "project_type", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["cluster_id"], name: "index_projects_on_cluster_id"
@@ -525,14 +573,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_24_211821) do
   add_foreign_key "account_users", "users"
   add_foreign_key "accounts", "users", column: "owner_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "add_ons", "clusters"
   add_foreign_key "api_tokens", "users"
   add_foreign_key "builds", "projects"
   add_foreign_key "clusters", "users"
+  add_foreign_key "deployments", "builds"
+  add_foreign_key "deployments", "projects"
+  add_foreign_key "deploys", "builds"
+  add_foreign_key "deploys", "projects"
   add_foreign_key "domains", "projects"
   add_foreign_key "environment_variables", "projects"
   add_foreign_key "pay_charges", "pay_customers", column: "customer_id"
   add_foreign_key "pay_payment_methods", "pay_customers", column: "customer_id"
   add_foreign_key "pay_subscriptions", "pay_customers", column: "customer_id"
+  add_foreign_key "project_add_ons", "add_ons"
+  add_foreign_key "project_add_ons", "projects"
   add_foreign_key "projects", "clusters"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

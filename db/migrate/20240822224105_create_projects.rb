@@ -11,6 +11,8 @@ class CreateProjects < ActiveRecord::Migration[7.1]
       t.string :docker_command
       t.string :predeploy_command
       t.string :container_registry, null: false
+      t.integer :status, default: 0, null: false
+      t.integer :project_type, null: false
 
       t.timestamps
     end

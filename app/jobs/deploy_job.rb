@@ -1,6 +1,6 @@
 class DeployJob < ApplicationJob
-  def perform(project)
-    cluster_kubeconfig = project.cluster.kubeconfig
+  def perform(deploy)
+    cluster_kubeconfig = deploy.project.cluster.kubeconfig
     deployment_yaml = K8::Stateless::Deployment.new(project).to_yaml
     service_yaml = K8::Stateless::Service.new(project).to_yaml
     apply_yaml_to_cluster(cluster_kubeconfig, deployment_yaml)
@@ -10,7 +10,7 @@ class DeployJob < ApplicationJob
   def apply_yaml_to_cluster(kubeconfig, yaml_content)
     # Assuming you have a method to run kubectl commands with the kubeconfig
     Tempfile.open(['kubeconfig', '.yaml']) do |kubeconfig_file|
-      kubeconfig_file.write(kubeconfig)
+      kubeconfig_file.write(kubeconfig.to_yaml)
       kubeconfig_file.flush
 
       # Create a temporary file for the YAML content

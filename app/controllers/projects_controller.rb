@@ -1,4 +1,5 @@
 class ProjectsController < ApplicationController
+  include ProjectsHelper
   before_action :set_project, only: [:show, :edit, :update, :destroy, :deploy]
 
   # GET /projects
@@ -14,7 +15,9 @@ class ProjectsController < ApplicationController
   end
 
   def deploy
-    DeployJob.perform_later(@project)
+    build = Build.create!(project: @project)
+    deploy = Deploy.create!(project: @project, build:)
+    DeployJob.perform_later(deploy)
     redirect_to @project, notice: "Deploying project"
   end
 
@@ -84,9 +87,16 @@ class ProjectsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def project_params
-    params.require(:project).permit(:name, :repository_url, :branch, :cluster_id, :container_registry, :docker_build_context_directory, :docker_command, :dockerfile_path)
-
-    # Uncomment to use Pundit permitted attributes
-    # params.require(:project).permit(policy(@project).permitted_attributes)
+    params.require(:project).permit(
+      :name,
+      :repository_url,
+      :branch,
+      :cluster_id,
+      :container_registry,
+      :docker_build_context_directory,
+      :docker_command,
+      :dockerfile_path,
+      :project_type,
+    )
   end
 end

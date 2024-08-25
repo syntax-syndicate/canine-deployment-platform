@@ -1,0 +1,17 @@
+<div class="container px-4 mx-auto my-8">
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="h3">
+      <%= link_to "Projects", projects_path, class: "text-black dark:text-white" %>
+      <span class="text-gray-400 font-light mx-2">\</span>
+      Project #<%= project.id %>
+    </h1>
+    <%= button_to "Deploy", deploy_project_url(project), class: "btn btn-primary m-1", data: { turbo: false, disable_with: "Loading..." } %>
+  </div>
+  <div class="p-8 bg-white dark:bg-gray-900 dark:border dark:border-gray-700 rounded shadow">
+    <div class="container mx-auto flex">
+      <!-- Sidebar -->
+      <%= render "projects/sidebar", project: project %>
+      <%= yield %>
+    </div>
+  </div>
+</div>

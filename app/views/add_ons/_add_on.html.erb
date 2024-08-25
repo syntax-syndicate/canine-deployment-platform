@@ -1,0 +1,21 @@
+<div id="<%= dom_id add_on %>">
+  <div class="mb-4">
+    <p class="text-sm font-medium text-gray-500">Cluster</p>
+    <%= add_on.cluster_id %>
+  </div>
+  <div class="mb-4">
+    <p class="text-sm font-medium text-gray-500">Add on type</p>
+    <%= add_on.add_on_type %>
+  </div>
+  <div class="mb-4">
+    <p class="text-sm font-medium text-gray-500">Name</p>
+    <%= add_on.name %>
+  </div>
+  <div class="mb-4">
+    <p class="text-sm font-medium text-gray-500">Metadata</p>
+    <%= add_on.metadata %>
+  </div>
+  <% if action_name != "show" %>
+    <%= link_to "View this add on", add_on, class: "btn btn-secondary" %>
+  <% end %>
+</div>

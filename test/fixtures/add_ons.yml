@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  cluster: one
+  add_on_type: 1
+  name: MyString
+  metadata: 
+
+two:
+  cluster: two
+  add_on_type: 1
+  name: MyString
+  metadata: 

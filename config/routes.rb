@@ -1,13 +1,13 @@
 # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
+  resources :add_ons
   resources :projects do
     member do
       post :deploy
     end
-    namespace :projects do
-      resources :environment_variables
-      resources :shell, only: [:show]
-    end
+    resources :project_add_ons, only: [:create, :destroy], module: :projects
+    resources :environment_variables, module: :projects
+    resources :shell, only: [:show], module: :projects
   end
   resources :clusters
   draw :accounts
