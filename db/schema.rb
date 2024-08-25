@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_22_215927) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_24_211821) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -123,7 +123,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_22_215927) do
     t.bigint "user_id", null: false
     t.string "token"
     t.string "name"
-    t.jsonb "metadata", default: {}
+    t.jsonb "metadata"
     t.boolean "transient", default: false
     t.datetime "last_used_at", precision: nil
     t.datetime "expires_at", precision: nil
@@ -131,6 +131,26 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_22_215927) do
     t.datetime "updated_at", null: false
     t.index ["token"], name: "index_api_tokens_on_token", unique: true
     t.index ["user_id"], name: "index_api_tokens_on_user_id"
+  end
+
+  create_table "builds", force: :cascade do |t|
+    t.bigint "project_id", null: false
+    t.string "repository_url"
+    t.string "git_sha"
+    t.string "commit_message"
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_builds_on_project_id"
+  end
+
+  create_table "clusters", force: :cascade do |t|
+    t.string "name", null: false
+    t.jsonb "kubeconfig", default: {}, null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_clusters_on_user_id"
   end
 
   create_table "connected_accounts", force: :cascade do |t|
@@ -146,6 +166,24 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_22_215927) do
     t.string "access_token_secret"
     t.string "owner_type"
     t.index ["owner_id", "owner_type"], name: "index_connected_accounts_on_owner_id_and_owner_type"
+  end
+
+  create_table "domains", force: :cascade do |t|
+    t.bigint "project_id", null: false
+    t.string "domain_name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_domains_on_project_id"
+  end
+
+  create_table "environment_variables", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "value"
+    t.bigint "project_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id", "name"], name: "index_environment_variables_on_project_id_and_name", unique: true
+    t.index ["project_id"], name: "index_environment_variables_on_project_id"
   end
 
   create_table "inbound_webhooks", force: :cascade do |t|
@@ -300,7 +338,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_22_215927) do
     t.string "name", null: false
     t.integer "amount", default: 0, null: false
     t.string "interval", null: false
-    t.jsonb "details", default: {}, null: false
+    t.jsonb "details"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.integer "trial_period_days", default: 0
@@ -317,6 +355,23 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_22_215927) do
     t.string "lemon_squeezy_id"
     t.string "fake_processor_id"
     t.string "contact_url"
+  end
+
+  create_table "projects", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "repository_url", null: false
+    t.string "branch", default: "main", null: false
+    t.bigint "cluster_id", null: false
+    t.boolean "autodeploy", default: true, null: false
+    t.string "dockerfile_path", default: "./Dockerfile", null: false
+    t.string "docker_build_context_directory", default: ".", null: false
+    t.string "docker_command"
+    t.string "predeploy_command"
+    t.string "container_registry", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cluster_id"], name: "index_projects_on_cluster_id"
+    t.index ["name"], name: "index_projects_on_name", unique: true
   end
 
   create_table "solid_queue_blocked_executions", force: :cascade do |t|
@@ -471,9 +526,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_22_215927) do
   add_foreign_key "accounts", "users", column: "owner_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "api_tokens", "users"
+  add_foreign_key "builds", "projects"
+  add_foreign_key "clusters", "users"
+  add_foreign_key "domains", "projects"
+  add_foreign_key "environment_variables", "projects"
   add_foreign_key "pay_charges", "pay_customers", column: "customer_id"
   add_foreign_key "pay_payment_methods", "pay_customers", column: "customer_id"
   add_foreign_key "pay_subscriptions", "pay_customers", column: "customer_id"
+  add_foreign_key "projects", "clusters"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

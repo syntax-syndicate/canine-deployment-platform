@@ -191,6 +191,7 @@ en:
     developer: "Developer"
     facebook: "Facebook"
     github: "GitHub"
+    digitalocean: "Digital Ocean"
     gitlab: "GitLab"
     google_oauth2: "Google"
     microsoft_graph: "Microsoft"

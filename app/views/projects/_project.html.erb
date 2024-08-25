@@ -1,0 +1,21 @@
+<div id="<%= dom_id project %>">
+  <div class="mb-4">
+    <p class="text-sm font-medium text-gray-500">Name</p>
+    <%= project.name %>
+  </div>
+  <div class="mb-4">
+    <p class="text-sm font-medium text-gray-500">Repository url</p>
+    <%= project.repository_url %>
+  </div>
+  <div class="mb-4">
+    <p class="text-sm font-medium text-gray-500">Branch</p>
+    <%= project.branch %>
+  </div>
+  <div class="mb-4">
+    <p class="text-sm font-medium text-gray-500">Cluster</p>
+    <%= project.cluster_id %>
+  </div>
+  <% if action_name != "show" %>
+    <%= link_to "View this project", project, class: "btn btn-secondary" %>
+  <% end %>
+</div>

@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  project: one
+  repository_url: MyString
+  git_sha: MyString
+  commit_message: MyString
+  status: 1
+
+two:
+  project: two
+  repository_url: MyString
+  git_sha: MyString
+  commit_message: MyString
+  status: 1

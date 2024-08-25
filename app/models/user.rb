@@ -14,4 +14,6 @@ class User < ApplicationRecord
 
   validates :avatar, resizable_image: true
   validates :name, presence: true
+  has_many :clusters, dependent: :destroy
+  has_many :projects, through: :clusters
 end

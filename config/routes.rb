@@ -1,5 +1,15 @@
 # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
+  resources :projects do
+    member do
+      post :deploy
+    end
+    namespace :projects do
+      resources :environment_variables
+      resources :shell, only: [:show]
+    end
+  end
+  resources :clusters
   draw :accounts
   draw :api
   draw :billing

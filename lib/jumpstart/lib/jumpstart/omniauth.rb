@@ -32,6 +32,11 @@ module Jumpstart
         name: "Twitter",
         provider: :twitter,
         icon: :twitter
+      },
+      "digitalocean" => {
+        name: "Digital Ocean",
+        provider: :digitalocean,
+        icon: :digitalocean
       }
     }.freeze
 
@@ -41,7 +46,6 @@ module Jumpstart
 
     def self.enabled_providers
       enabled = {}
-
       AVAILABLE_PROVIDERS.each do |gem_name, details|
         next unless enabled?(gem_name)
 

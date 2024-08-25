@@ -12,6 +12,7 @@ apns: false
 fcm: false
 integrations:
 omniauth_providers:
+- digitalocean
 - github
 payment_processors:
 - stripe

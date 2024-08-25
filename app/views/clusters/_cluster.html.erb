@@ -1,0 +1,15 @@
+<div id="<%= dom_id cluster %>">
+  <div class="mb-4">
+    <p class="text-sm font-medium text-gray-500">Name</p>
+    <%= cluster.name %>
+  </div>
+  <% if action_name != "show" %>
+    <%= link_to "View this cluster", cluster, class: "btn btn-secondary" %>
+  <% else %>
+    Projects:
+    <br/>
+    <% cluster.projects.each do |project| %>
+      <%= render project %>
+    <% end %>
+  <% end %>
+</div>

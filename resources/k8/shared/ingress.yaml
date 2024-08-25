@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: <%= cluster_name %>-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: "nginx"
+  tls:
+  - hosts:
+    <% domains.each do |domain| %>
+    - <%= domain.domain_name %>
+    <% end %>
+    secretName: example-tls
+  rules:
+  <% domains.each do |domain| %>
+  - host: domain.domain_name
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: <%= name %>
+            port:
+              number: 80
+  <% end %>

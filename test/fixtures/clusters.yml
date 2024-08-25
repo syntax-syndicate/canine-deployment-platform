@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: cluster1
+  kubeconfig: {}
+  user: one
+
+two:
+  name: cluster2
+  kubeconfig: {}
+  user: two

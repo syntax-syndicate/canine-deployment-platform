@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: project_1
+  repository_url: user/project1
+  branch: main
+  cluster: one
+  container_registry: user/project2
+
+two:
+  name: project_2
+  repository_url: user/project2
+  branch: main
+  cluster: two
+  container_registry: user/project2

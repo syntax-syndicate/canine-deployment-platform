@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: <%= name %>-deployment
+  labels:
+    app: <%= name %>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: <%= name %>
+  template:
+    metadata:
+      labels:
+        app: <%= name %>
+    spec:
+      containers:
+      - name: <%= name %>
+        image: <%= container_registry %>:latest
+        imagePullPolicy: Always
+        env:
+        <% environment_variables.each do |env| %>
+          - name: <%= env.name %>
+            value: <%= env.value %>
+        <% end %>
+        ports:
+        - containerPort: <%= port %>
