@@ -1,5 +1,8 @@
 # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
+  namespace :inbound_webhooks do
+    resources :github, controller: :github, only: [:create]
+  end
   resources :add_ons
   resources :projects do
     member do

@@ -98,12 +98,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_25_063406) do
 
   create_table "add_ons", force: :cascade do |t|
     t.bigint "cluster_id", null: false
+    t.string "type", null: false
     t.integer "add_on_type", null: false
     t.string "name", null: false
     t.integer "status", default: 0, null: false
     t.jsonb "metadata", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["cluster_id", "name"], name: "index_add_ons_on_cluster_id_and_name", unique: true
     t.index ["cluster_id"], name: "index_add_ons_on_cluster_id"
   end
 

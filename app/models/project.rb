@@ -18,4 +18,8 @@ class Project < ApplicationRecord
   def last_deployed_at
     deployments.order(created_at: :desc).first&.created_at
   end
+
+  def repository_name
+    repository_url.split('/').last
+  end
 end

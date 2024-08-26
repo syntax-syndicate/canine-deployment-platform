@@ -16,4 +16,5 @@ class User < ApplicationRecord
   validates :name, presence: true
   has_many :clusters, dependent: :destroy
   has_many :projects, through: :clusters
+  has_one :docker_hub_credential, dependent: :destroy
 end

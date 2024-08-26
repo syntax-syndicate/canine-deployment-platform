@@ -5,7 +5,7 @@ class CreateBuilds < ActiveRecord::Migration[7.1]
       t.string :repository_url
       t.string :git_sha
       t.string :commit_message
-      t.integer :status
+      t.integer :status, default: 0
 
       t.timestamps
     end

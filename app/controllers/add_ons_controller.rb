@@ -27,7 +27,11 @@ class AddOnsController < ApplicationController
 
   # POST /add_ons or /add_ons.json
   def create
-    @add_on = AddOn.new(add_on_params)
+    if add_on_params[:add_on_type] == "postgres" || add_on_params[:add_on_type] == "redis"
+      @add_on = DatabaseAddOn.make(add_on_params)
+    else
+      @add_on = AddOn.create(add_on_params)
+    end
 
     # Uncomment to authorize with Pundit
     # authorize @add_on

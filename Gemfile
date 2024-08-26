@@ -93,3 +93,5 @@ eval_gemfile "Gemfile.jumpstart"
 # gem "strong_migrations"
 
 gem "omniauth-digitalocean", "~> 0.3.2"
+
+gem "octokit", "~> 9.1"
