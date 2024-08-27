@@ -182,12 +182,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_25_063406) do
   end
 
   create_table "deployments", force: :cascade do |t|
-    t.bigint "project_id", null: false
     t.bigint "build_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["build_id"], name: "index_deployments_on_build_id"
-    t.index ["project_id"], name: "index_deployments_on_project_id"
   end
 
   create_table "deploys", force: :cascade do |t|
@@ -580,7 +578,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_25_063406) do
   add_foreign_key "builds", "projects"
   add_foreign_key "clusters", "users"
   add_foreign_key "deployments", "builds"
-  add_foreign_key "deployments", "projects"
   add_foreign_key "deploys", "builds"
   add_foreign_key "deploys", "projects"
   add_foreign_key "domains", "projects"
