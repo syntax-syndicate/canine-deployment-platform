@@ -12,7 +12,11 @@ Rails.application.routes.draw do
     resources :environment_variables, module: :projects
     resources :shell, only: [:show], module: :projects
   end
-  resources :clusters
+  resources :clusters do
+    member do
+      post :test_connection
+    end
+  end
   draw :accounts
   draw :api
   draw :billing

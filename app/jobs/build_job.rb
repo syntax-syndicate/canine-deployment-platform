@@ -1,10 +1,10 @@
 class BuildJob < ApplicationJob
   queue_as :default
 
-  def perform(project)
+  def perform(project_id)
     # Ensure the project is loaded as an instance of the Project model
-    build = Build.create(project:)
-    project = Project.find(project.id)
+    build = Build.create!(project_id:)
+    project = Project.find(project_id)
 
     # Step 1: Run any predeploy commands if provided
     if project.predeploy_command.present?
@@ -17,8 +17,7 @@ class BuildJob < ApplicationJob
       end
     end
     # Step 2: clone the repository to a temporary directory with github credentials
-    TmpDir.create do |dir|
-      repository_path = dir.path
+    Dir.mktmpdir do |repository_path|
       build.append_log_line("Cloning repository: #{project.repository_url} to #{repository_path}")
 
       # Ensure the temporary directory doesn't exist
@@ -45,22 +44,30 @@ class BuildJob < ApplicationJob
       # Step 3: Construct the Docker build command
       docker_build_command = [
         "docker", "build",
-        "-t", "#{project.user.github_username}/#{project.repository_name.downcase}:latest",
-        "-f", project.dockerfile_path,
-        project.docker_build_context_directory
+        "-t", "ghcr.io/#{project.repository_url}:latest",
+        "-f", File.join(repository_path, project.dockerfile_path),
+        File.join(repository_path, project.docker_build_context_directory)
       ]
 
       # Step 4: Execute the Docker build command
-      Rails.logger.info "Running Docker build command: #{docker_build_command.join(' ')}"
-      stdout, stderr, status = Open3.capture3(*docker_build_command)
+      build.append_log_line "Running Docker build command: #{docker_build_command.join(' ')}"
+      IO.popen(docker_build_command, "r") do |io|
+        # Continuously read each line of output
+        io.each do |line|
+          # Print the line to the console
+          build.append_log_line line
+        end
 
-      if status.success?
-        Rails.logger.info "Docker build completed successfully for project #{project.name}:\n#{stdout}"
-      else
-        Rails.logger.error "Docker build failed for project #{project.name} with error:\n#{stderr}"
-        return
+        io.close
+        exit_status = $?.exitstatus
+      
+        if exit_status != 0
+          build.append_log_line "Command failed with exit status #{exit_status}"
+        else
+          build.append_log_line "Command completed successfully."
+        end
       end
-
+      
       # Step 5: Log in to Docker Hub
       docker_login_command = [
         "docker",
@@ -80,23 +87,23 @@ class BuildJob < ApplicationJob
         return
       end
 
-      # Step 5: Push the Docker image to Docker Hub
+      # Step 6: Push the Docker image to Docker Hub
       docker_push_command = [
         "docker", "push",
-        "#{project.user.github_username}/#{project.name.downcase}:latest"
+        "ghcr.io/#{project.repository_url}:latest",
       ]
 
-      Rails.logger.info "Pushing Docker image to Docker Hub: #{docker_push_command.join(' ')}"
+      build.append_log_line "Pushing Docker image to Docker Hub: #{docker_push_command.join(' ')}"
       stdout, stderr, status = Open3.capture3(*docker_push_command)
 
       if status.success?
-        Rails.logger.info "Docker image pushed successfully for project #{project.name}:\n#{stdout}"
+        build.append_log_line "Docker image pushed successfully for project #{project.name}:\n#{stdout}"
       else
-        Rails.logger.error "Docker push failed for project #{project.name} with error:\n#{stderr}"
+        build.append_log_line "Docker push failed for project #{project.name} with error:\n#{stderr}"
         return
       end
 
-      # Step 6: Optionally, add post-deploy tasks or slack notifications
+      # Step 7: Optionally, add post-deploy tasks or slack notifications
     end
   end
 end

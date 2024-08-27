@@ -3,12 +3,23 @@
 
   <div class="form-group">
     <%= form.label :name %>
-    <%= form.text_field :name, class: "form-control" %>
+    <%= form.text_field :name, class: "form-control", value: RandomNameGenerator.generate_name %>
   </div>
 
   <div class="form-group">
     <%= form.label :project_type %>
     <%= form.select :project_type, Project.project_types.keys.map { |type| [type.titleize, type] }, {}, class: "form-control" %>
+  </div>
+  <div class="text-sm mb-4">
+    <p>
+      <b>Web service</b>: Useful for publicly accessible services like web applications.
+    </p>
+    <p>
+      <b>Internal service</b>: Useful for services that should only be accessed within the cluster like databases.
+    </p>
+    <p>
+      <b>Process</b>: Useful for services that should don't need to be connected to like background workers & cron jobs.
+    </p>
   </div>
 
   <div class="form-group">

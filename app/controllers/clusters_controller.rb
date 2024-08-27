@@ -1,5 +1,5 @@
 class ClustersController < ApplicationController
-  before_action :set_cluster, only: [:show, :edit, :update, :destroy]
+  before_action :set_cluster, only: [:show, :edit, :update, :destroy, :test_connection]
 
   # GET /clusters
   def index
@@ -23,6 +23,15 @@ class ClustersController < ApplicationController
 
   # GET /clusters/1/edit
   def edit
+  end
+
+  def test_connection
+    client = K8::Client.new(@cluster.kubeconfig)
+    if client.can_connect?
+      render turbo_stream: turbo_stream.replace("test_connection_frame", partial: "clusters/connection_success")
+    else
+      render turbo_stream: turbo_stream.replace("test_connection_frame", partial: "clusters/connection_failed")
+    end
   end
 
   # POST /clusters or /clusters.json
