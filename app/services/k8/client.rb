@@ -1,5 +1,10 @@
 module K8
   class Client
+    attr_reader :client
+    def self.from_project(project)
+      new(project.cluster.kubeconfig)
+    end
+
     def initialize(kubeconfig)
       @kubeconfig = kubeconfig
       @client = build_client
@@ -41,9 +46,9 @@ module K8
 
     def ssl_options(cluster_info)
       ssl_options = { verify_ssl: OpenSSL::SSL::VERIFY_NONE }
-      if cluster_info['certificate-authority-data']
-        ssl_options[:ca_file] = write_temp_file(Base64.decode64(cluster_info['certificate-authority-data']))
-      end
+      #if cluster_info['certificate-authority-data']
+      #  ssl_options[:ca_file] = write_temp_file(Base64.decode64(cluster_info['certificate-authority-data']))
+      #end
       ssl_options
     end
 

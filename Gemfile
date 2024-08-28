@@ -96,4 +96,8 @@ gem "omniauth-digitalocean", "~> 0.3.2"
 
 gem "octokit", "~> 9.1"
 
-gem "kubeclient", "~> 4.12"
+gem "kubeclient", "~> 4.11"
+
+gem "kubeclient_exec", "~> 0.1.3"
+
+gem "k8s-ruby", "~> 0.16.0"

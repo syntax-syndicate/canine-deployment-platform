@@ -14,6 +14,9 @@ class DeploymentJob < ApplicationJob
     service_yaml = K8::Stateless::Service.new(project).to_yaml
     apply_yaml_to_cluster(cluster_kubeconfig, deployment_yaml)
     apply_yaml_to_cluster(cluster_kubeconfig, service_yaml)
+    deployment.completed!
+  rescue StandardError => e
+    deployment.failed!
   end
 
   def apply_yaml_to_cluster(kubeconfig, yaml_content)

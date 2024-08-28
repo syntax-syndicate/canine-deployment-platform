@@ -2,3 +2,4 @@
 // Channel files must be named *_channel.js.
 
 import "./**/*_channel.js"
+import "./shell_channel"

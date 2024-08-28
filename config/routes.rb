@@ -10,7 +10,9 @@ Rails.application.routes.draw do
     end
     resources :project_add_ons, only: [:create, :destroy], module: :projects
     resources :environment_variables, module: :projects
-    resources :shell, only: [:show], module: :projects
+    resource :shell, only: [:show, :create, :destroy], module: :projects do
+      post :input, on: :collection
+    end
   end
   resources :clusters do
     member do
