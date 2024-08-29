@@ -14,14 +14,14 @@ spec:
     secretName: example-tls
   rules:
   <% domains.each do |domain| %>
-  - host: domain.domain_name
+  - host: <%= domain.domain_name %>
     http:
       paths:
       - pathType: Prefix
         path: "/"
         backend:
           service:
-            name: <%= name %>
+            name: <%= domain.project.name %>-service
             port:
               number: 80
   <% end %>

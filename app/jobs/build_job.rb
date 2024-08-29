@@ -103,7 +103,11 @@ class BuildJob < ApplicationJob
         return
       end
 
+      build.completed!
       # Step 7: Optionally, add post-deploy tasks or slack notifications
+    rescue StandardError => e
+      build.append_log_line "Build failed: #{e.message}"
+      build.failed!
     end
   end
 end

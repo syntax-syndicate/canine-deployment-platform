@@ -35,13 +35,11 @@ class ProjectsController < ApplicationController
 
   # POST /projects or /projects.json
   def create
-    @project = Project.new(project_params)
+    result = Projects::Create.call(current_user, Project.new(project_params))
 
-    # Uncomment to authorize with Pundit
-    # authorize @project
-
+    @project = result.project
     respond_to do |format|
-      if @project.save
+      if result.success?
         format.html { redirect_to @project, notice: "Project was successfully created." }
         format.json { render :show, status: :created, location: @project }
       else
