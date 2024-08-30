@@ -43,6 +43,8 @@ class ClustersController < ApplicationController
 
     respond_to do |format|
       if @cluster.save
+        # Kick off cluster job
+        InstallClusterJob.perform_later(@cluster)
         format.html { redirect_to @cluster, notice: "Cluster was successfully created." }
         format.json { render :show, status: :created, location: @cluster }
       else

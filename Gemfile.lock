@@ -167,6 +167,7 @@ GEM
     devise-i18n (1.12.0)
       devise (>= 4.9.0)
     domain_name (0.6.20240107)
+    dotenv (3.1.2)
     drb (2.2.1)
     dry-configurable (1.2.0)
       dry-core (~> 1.0, < 2)
@@ -629,6 +630,7 @@ DEPENDENCIES
   debug
   devise!
   devise-i18n (~> 1.10)
+  dotenv (~> 3.1)
   erb_lint
   image_processing (~> 1.12)
   inline_svg (~> 1.6)

@@ -54,6 +54,7 @@ module JumpstartApp
     # Support older SHA1 digests for ActiveStorage so ActionText attachments don't break
     config.after_initialize do |app|
       app.message_verifier("ActiveStorage").rotate(digest: "SHA1")
+      Rails.application.routes.default_url_options[:host] = ENV['APP_HOST']
     end
 
     # Support older SHA1 digests for ActiveRecord::Encryption

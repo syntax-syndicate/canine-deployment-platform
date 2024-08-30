@@ -1,11 +1,11 @@
-class Projects::Create
+class Projects::ValidateGithubRepository
   extend LightService::Action
 
-  expects :current_user, :project
+  expects :project
   promises :project
 
-  executed do
-    client = Octokit::Client.new(access_token: context.current_user.github_token)
+  executed do |context|
+    client = Octokit::Client.new(access_token: context.project.user.github_access_token)
     unless client.repository?(context.project.repository_url)
       context.project.errors.add(:repository_url, "does not exist")
       context.fail!("Repository does not exist")

@@ -1,11 +1,11 @@
-class Projects::Create
+class Projects::RegisterGithubWebhook
   extend LightService::Action
 
-  expects :current_user, :project
+  expects :project
   promises :project
 
-  executed do
-    client = Octokit::Client.new(access_token: context.current_user.github_token)
+  executed do |context|
+    client = Octokit::Client.new(access_token: context.project.user.github_access_token)
     client.create_hook(
       context.project.repository_url,
       'web',

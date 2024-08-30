@@ -18,12 +18,15 @@ module InboundWebhooks
     end
 
     def process_webhook(body)
+      return if body['pusher'].nil?
       user = User.find_by(email: body['pusher']['email'])
       return if user.nil?
-      projects = user.projects.where(repository_url: body['repository']['url'], branch: body['ref'], auto_deploy: true)
+      branch = body['ref'].gsub('refs/heads/', '')
+      projects = user.projects.where(repository_url: body['repository']['full_name'], branch: branch, auto_deploy: true)
       projects.each do |project|
         # Trigger a docker build & docker deploy
-        DeployJob.perform_later(project)
+        build = Build.create!(project_id: project.id, sha: body['head_commit']['id'])
+        BuildJob.perform_later(build.id)
       end
     end
   end

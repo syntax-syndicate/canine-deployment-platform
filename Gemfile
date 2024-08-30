@@ -103,3 +103,5 @@ gem "kubeclient_exec", "~> 0.1.3"
 gem "k8s-ruby", "~> 0.16.0"
 
 gem "light-service", "~> 0.18.0"
+
+gem "dotenv", "~> 3.1"

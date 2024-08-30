@@ -4,7 +4,7 @@ class Projects::Save
   expects :project
   promises :project
 
-  executed do
+  executed do |context|
     context.project.save!
   end
 end
