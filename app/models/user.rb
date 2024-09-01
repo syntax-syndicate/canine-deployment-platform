@@ -17,6 +17,7 @@ class User < ApplicationRecord
   has_many :clusters, dependent: :destroy
   has_many :projects, through: :clusters
   has_one :docker_hub_credential, dependent: :destroy
+  has_many :add_ons, through: :clusters
 
   def github_username
     github_account.auth['info']['nickname']

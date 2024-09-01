@@ -6,7 +6,7 @@
     <h1 class="h3">
       <%= link_to "Add Ons", add_ons_path, class: "text-black dark:text-white" %>
       <span class="text-gray-400 font-light mx-2">\</span>
-      Add On #<%= @add_on.id %>
+      <%= @add_on.name %>
     </h1>
     <%= link_to t("edit"), edit_add_on_path(@add_on), class: "btn btn-secondary" %>
   </div>

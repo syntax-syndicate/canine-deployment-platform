@@ -1,7 +1,7 @@
 require 'base64'
 require 'json'
 
-class DeploymentJob < ApplicationJob
+class Projects::DeploymentJob < ApplicationJob
   def perform(build)
     deployment = Deployment.create!(build: build)
     cluster_kubeconfig = deployment.project.cluster.kubeconfig

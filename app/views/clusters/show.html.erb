@@ -6,7 +6,7 @@
     <h1 class="h3">
       <%= link_to "Clusters", clusters_path, class: "text-black dark:text-white" %>
       <span class="text-gray-400 font-light mx-2">\</span>
-      Cluster #<%= @cluster.id %>
+      <%= @cluster.name %>
     </h1>
     <%= turbo_frame_tag "test_connection_frame" do %>
       <%= button_to "Test Connection", test_connection_cluster_path(@cluster), class: "btn btn-info btn-outline" %>

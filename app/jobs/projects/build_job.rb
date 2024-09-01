@@ -1,4 +1,4 @@
-class BuildJob < ApplicationJob
+class Projects::BuildJob < ApplicationJob
   queue_as :default
 
   def perform(build_id)

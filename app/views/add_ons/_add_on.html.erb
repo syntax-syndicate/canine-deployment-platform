@@ -4,8 +4,8 @@
     <%= add_on.cluster_id %>
   </div>
   <div class="mb-4">
-    <p class="text-sm font-medium text-gray-500">Add on type</p>
-    <%= add_on.add_on_type %>
+    <p class="text-sm font-medium text-gray-500">Helm Chart URL</p>
+    <%= add_on.helm_chart_url %>
   </div>
   <div class="mb-4">
     <p class="text-sm font-medium text-gray-500">Name</p>
@@ -15,6 +15,7 @@
     <p class="text-sm font-medium text-gray-500">Metadata</p>
     <%= add_on.metadata %>
   </div>
+  <%= render "log_outputs/logs", loggable: add_on %>
   <% if action_name != "show" %>
     <%= link_to "View this add on", add_on, class: "btn btn-secondary" %>
   <% end %>

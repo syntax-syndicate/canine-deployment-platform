@@ -27,17 +27,13 @@ class AddOnsController < ApplicationController
 
   # POST /add_ons or /add_ons.json
   def create
-    if add_on_params[:add_on_type] == "postgres" || add_on_params[:add_on_type] == "redis"
-      @add_on = DatabaseAddOn.make(add_on_params)
-    else
-      @add_on = AddOn.create(add_on_params)
-    end
-
+    @add_on = AddOn.create(add_on_params)
     # Uncomment to authorize with Pundit
     # authorize @add_on
 
     respond_to do |format|
       if @add_on.save
+        AddOns::InstallJob.perform_later(@add_on.id)
         format.html { redirect_to @add_on, notice: "Add on was successfully created." }
         format.json { render :show, status: :created, location: @add_on }
       else
@@ -73,7 +69,7 @@ class AddOnsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_add_on
-    @add_on = AddOn.find(params[:id])
+    @add_on = current_user.add_ons.find(params[:id])
 
     # Uncomment to authorize with Pundit
     # authorize @add_on
@@ -83,7 +79,7 @@ class AddOnsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def add_on_params
-    params.require(:add_on).permit(:cluster_id, :add_on_type, :name, :metadata)
+    params.require(:add_on).permit(:cluster_id, :helm_chart_url, :name, :metadata)
 
     # Uncomment to use Pundit permitted attributes
     # params.require(:add_on).permit(policy(@add_on).permitted_attributes)

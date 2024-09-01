@@ -1,15 +1,12 @@
 class AddOn < ApplicationRecord
+  include Loggable
   belongs_to :cluster
-  enum add_on_type: {
-    postgres: 0,
-    redis: 1,
-    helm_chart: 2,
-  }
   enum status: {
     installing: 0,
     installed: 1,
     uninstalling: 2,
     uninstalled: 3,
+    failed: 4,
   }
   validates :name, presence: true, format: { with: /\A[a-z0-9_-]+\z/, message: "must be lowercase, numbers, hyphens, and underscores only" }
 

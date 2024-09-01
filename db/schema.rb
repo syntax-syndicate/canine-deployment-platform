@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_29_062705) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_30_175015) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -98,9 +98,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_29_062705) do
 
   create_table "add_ons", force: :cascade do |t|
     t.bigint "cluster_id", null: false
-    t.string "type", null: false
-    t.integer "add_on_type", null: false
     t.string "name", null: false
+    t.string "helm_chart_url", null: false
     t.integer "status", default: 0, null: false
     t.jsonb "metadata", default: {}
     t.datetime "created_at", null: false
@@ -154,6 +153,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_29_062705) do
     t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "sha"
     t.index ["project_id"], name: "index_builds_on_project_id"
   end
 
