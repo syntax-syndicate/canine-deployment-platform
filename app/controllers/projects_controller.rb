@@ -14,13 +14,6 @@ class ProjectsController < ApplicationController
   def show
   end
 
-  def deploy
-    build = Build.create!(project: @project)
-    deploy = Deploy.create!(project: @project, build:)
-    DeployJob.perform_later(deploy)
-    redirect_to @project, notice: "Deploying project"
-  end
-
   # GET /projects/new
   def new
     @project = Project.new

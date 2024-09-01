@@ -25,8 +25,14 @@ module InboundWebhooks
       projects = user.projects.where(repository_url: body['repository']['full_name'], branch: branch, auto_deploy: true)
       projects.each do |project|
         # Trigger a docker build & docker deploy
-        build = Build.create!(project_id: project.id, sha: body['head_commit']['id'])
-        BuildJob.perform_later(build.id)
+        if project.auto_deploy
+          build = Build.create!(
+            project_id: project.id,
+            commit_sha: body['head_commit']['id'],
+            commit_message: body['head_commit']['message']
+          )
+          BuildJob.perform_later(build.id)
+        end
       end
     end
   end

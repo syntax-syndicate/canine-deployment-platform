@@ -6,6 +6,7 @@ class Projects::Create
       Projects::ValidateGithubRepository,
       Projects::Save,
       Projects::RegisterGithubWebhook,
+      Projects::DeployLatestCommit,
     )
   end
 end

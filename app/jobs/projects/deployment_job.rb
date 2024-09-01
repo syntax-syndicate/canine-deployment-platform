@@ -17,7 +17,7 @@ class Projects::DeploymentJob < ApplicationJob
     kubectl.apply_yaml(service_yaml)
     deployment.completed!
   rescue StandardError => e
-    deployment.append_log_line "Deployment failed: #{e.message}"
+    deployment.info "Deployment failed: #{e.message}"
     deployment.failed!
   end
 

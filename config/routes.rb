@@ -5,16 +5,22 @@ Rails.application.routes.draw do
   end
   resources :add_ons
   resources :projects do
-    member do
-      post :deploy
-    end
     resources :project_add_ons, only: [:create, :destroy], module: :projects
     resources :environment_variables, module: :projects
+    resources :deployments, only: [:index, :show], module: :projects do
+      collection do
+        post :deploy
+      end
+      member do
+        post :redeploy
+      end
+    end
     resource :shell, only: [:show, :create, :destroy], module: :projects do
       post :input, on: :collection
     end
   end
   resources :clusters do
+    resource :metrics, only: [:show], module: :clusters
     member do
       post :test_connection
     end

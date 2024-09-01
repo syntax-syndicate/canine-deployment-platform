@@ -5,7 +5,7 @@ module Loggable
     has_one :log_output, as: :loggable, dependent: :destroy
   end
 
-  def append_log_line(line)
+  def info(line)
     Rails.logger.info(line)
     ensure_log_output
     log_output.update(output: log_output.output.to_s + line + "\n")

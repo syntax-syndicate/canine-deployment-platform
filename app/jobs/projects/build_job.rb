@@ -8,17 +8,17 @@ class Projects::BuildJob < ApplicationJob
 
     # Step 1: Run any predeploy commands if provided
     if project.predeploy_command.present?
-      build.append_log_line "Running predeploy command: #{project.predeploy_command}"
+      build.info "Running predeploy command: #{project.predeploy_command}"
       success = system(project.predeploy_command)
       
       unless success
-        build.append_log_line "Predeploy command failed for project #{project.name}"
+        build.info "Predeploy command failed for project #{project.name}"
         return
       end
     end
     # Step 2: clone the repository to a temporary directory with github credentials
     Dir.mktmpdir do |repository_path|
-      build.append_log_line("Cloning repository: #{project.repository_url} to #{repository_path}")
+      build.info("Cloning repository: #{project.repository_url} to #{repository_path}")
 
       # Ensure the temporary directory doesn't exist
       FileUtils.rm_rf(repository_path) if Dir.exist?(repository_path)
@@ -27,6 +27,8 @@ class Projects::BuildJob < ApplicationJob
       git_clone_command = [
         "git",
         "clone",
+        "--depth", "1",
+        "--branch", build.sha,
         "https://#{project.user.github_username}:#{project.user.github_access_token}@github.com/#{project.repository_url}.git",
         repository_path
       ]
@@ -35,9 +37,9 @@ class Projects::BuildJob < ApplicationJob
       stdout, stderr, status = Open3.capture3(*git_clone_command)
       
       if status.success?
-        build.append_log_line "Repository cloned successfully to #{repository_path}"
+        build.info "Repository cloned successfully to #{repository_path}"
       else
-        build.append_log_line "Failed to clone repository: #{stderr}"
+        build.info "Failed to clone repository: #{stderr}"
         return
       end
 
@@ -50,21 +52,21 @@ class Projects::BuildJob < ApplicationJob
       ]
 
       # Step 4: Execute the Docker build command
-      build.append_log_line "Running Docker build command: #{docker_build_command.join(' ')}"
+      build.info "Running Docker build command: #{docker_build_command.join(' ')}"
       IO.popen(docker_build_command, "r") do |io|
         # Continuously read each line of output
         io.each do |line|
           # Print the line to the console
-          build.append_log_line line
+          build.info line
         end
 
         io.close
         exit_status = $?.exitstatus
       
         if exit_status != 0
-          build.append_log_line "Command failed with exit status #{exit_status}"
+          build.info "Command failed with exit status #{exit_status}"
         else
-          build.append_log_line "Command completed successfully."
+          build.info "Command completed successfully."
         end
       end
       
@@ -93,23 +95,21 @@ class Projects::BuildJob < ApplicationJob
         "ghcr.io/#{project.repository_url}:latest",
       ]
 
-      build.append_log_line "Pushing Docker image to Docker Hub: #{docker_push_command.join(' ')}"
+      build.info "Pushing Docker image to Docker Hub: #{docker_push_command.join(' ')}"
       stdout, stderr, status = Open3.capture3(*docker_push_command)
 
       if status.success?
-        build.append_log_line "Docker image pushed successfully for project #{project.name}:\n#{stdout}"
+        build.info "Docker image pushed successfully for project #{project.name}:\n#{stdout}"
       else
-        build.append_log_line "Docker push failed for project #{project.name} with error:\n#{stderr}"
+        build.info "Docker push failed for project #{project.name} with error:\n#{stderr}"
         return
       end
 
       build.completed!
-      if project.auto_deploy
-        DeployJob.perform_later(project)
-      end
+      DeployJob.perform_later(project)
       # Step 7: Optionally, add post-deploy tasks or slack notifications
     rescue StandardError => e
-      build.append_log_line "Build failed: #{e.message}"
+      build.info "Build failed: #{e.message}"
       build.failed!
     end
   end

@@ -5,13 +5,15 @@
       <span class="text-gray-400 font-light mx-2">\</span>
       <%= project.name %>
     </h1>
-    <%= button_to "Deploy", deploy_project_url(project), class: "btn btn-primary m-1", data: { turbo: false, disable_with: "Loading..." } %>
+    <%= button_to "Deploy", deploy_project_deployments_url(project), class: "btn btn-primary m-1", data: { turbo: false, disable_with: "Loading..." } %>
   </div>
   <div class="p-8 bg-white dark:bg-gray-900 dark:border dark:border-gray-700 rounded shadow">
     <div class="container mx-auto flex">
       <!-- Sidebar -->
       <%= render "projects/sidebar", project: project %>
-      <%= yield %>
+      <div class="block">
+        <%= yield %>
+      </div>
     </div>
   </div>
 </div>
