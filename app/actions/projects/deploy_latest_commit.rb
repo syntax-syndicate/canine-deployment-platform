@@ -6,6 +6,7 @@ class Projects::DeployLatestCommit
 
   executed do |context|
     # Fetch the latest commit from the default branch
+    project = context.project
     client = Octokit::Client.new(access_token: project.user.github_access_token)
     commit = client.commits(project.repository_url).first
 
@@ -14,6 +15,6 @@ class Projects::DeployLatestCommit
       commit_sha: commit.sha,
       commit_message: commit.commit[:message]
     )
-    BuildJob.perform_later(build.id)
+    Projects::BuildJob.perform_later(build.id)
   end
 end

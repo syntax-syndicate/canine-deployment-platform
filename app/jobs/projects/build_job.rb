@@ -106,7 +106,7 @@ class Projects::BuildJob < ApplicationJob
       end
 
       build.completed!
-      DeployJob.perform_later(project)
+      Projects::DeploymentJob.perform_later(build)
       # Step 7: Optionally, add post-deploy tasks or slack notifications
     rescue StandardError => e
       build.info "Build failed: #{e.message}"

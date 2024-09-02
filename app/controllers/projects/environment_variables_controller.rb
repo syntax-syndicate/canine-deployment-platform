@@ -7,7 +7,7 @@ class Projects::EnvironmentVariablesController < Projects::BaseController
 
   def create
     @project.environment_variables.create!(environment_variable_params)
-
+    # reapply deployment.yaml
   end
 
   def update

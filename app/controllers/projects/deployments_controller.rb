@@ -4,12 +4,15 @@ class Projects::DeploymentsController < Projects::BaseController
   def index
     @builds = @project.builds
   end
+  def show
+    @build = @project.builds.find(params[:id])
+  end
 
   def redeploy
     deployment = @project.deployments.find(params[:id])
     new_build = deployment.build.dup
     new_build.save!
-    BuildJob.perform_later(new_build.id)
+    Projects::BuildJob.perform_later(new_build.id)
     redirect_to project_deployment_path(project, new_build), notice: "Redeploying..."
   end
 

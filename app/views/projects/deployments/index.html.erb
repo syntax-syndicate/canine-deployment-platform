@@ -12,9 +12,9 @@
     <ul class="space-y-4">
       <% @builds.each do |build| %>
         <li class="border rounded-lg p-4">
-          <div class="flex justify-between items-center">
-            <span class="font-semibold"><%= build.commit_message %></span>
-            <span class="text-sm"><%= build.created_at.strftime("%B %d, %Y %H:%M") %></span>
+          <div>
+            <p class="font-semibold"><%= build.commit_message %></p>
+            <p class="text-sm"><%= build.created_at.strftime("%B %d, %Y %H:%M") %></p>
           </div>
           <div class="mt-2 text-sm">
             Status: <%= build.deployment&.status || build.status %>
@@ -22,10 +22,16 @@
           <div class="mt-2 text-sm">
             Commit: 
             <%= link_to build.commit_sha[0..6], 
-                        "https://github.com/#{@project.github_repo}/commit/#{deployment.commit_sha}",
+                        "https://github.com/#{@project.repository_url}/commit/#{build.commit_sha}",
                         class: "underline",
                         target: "_blank",
                         rel: "noopener noreferrer" %>
+          </div>
+          <div class="mt-2 text-sm">
+            <%= link_to "Redeploy", redeploy_project_deployment_path(@project, build), method: :post, class: "btn btn-primary" %>
+          </div>
+          <div class="mt-2 text-sm">
+            <%= link_to "View Logs", project_deployment_path(@project, build), class: "btn btn-primary" %>
           </div>
           <!-- Add more deployment details as needed -->
         </li>
