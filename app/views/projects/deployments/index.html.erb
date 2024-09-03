@@ -28,7 +28,7 @@
                         rel: "noopener noreferrer" %>
           </div>
           <div class="mt-2 text-sm">
-            <%= link_to "Redeploy", redeploy_project_deployment_path(@project, build), method: :post, class: "btn btn-primary" %>
+            <%= button_to "Redeploy", redeploy_project_deployment_path(@project, build), method: :post, class: "btn btn-primary" %>
           </div>
           <div class="mt-2 text-sm">
             <%= link_to "View Logs", project_deployment_path(@project, build), class: "btn btn-primary" %>

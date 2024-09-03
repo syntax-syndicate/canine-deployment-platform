@@ -5,14 +5,14 @@ class Projects::EnvironmentVariablesController < Projects::BaseController
     @environment_variables = @project.environment_variables
   end
 
-  def create
-    @project.environment_variables.create!(environment_variable_params)
-    # reapply deployment.yaml
-  end
-
   def update
-    environment_variable = @project.environment_variables.find(params[:id])
-    environment_variable.update!(environment_variable_params)
+    result = EnvironmentVariables::BulkUpdate.execute(project: @project, params: params)
+    if @project.current_deployment.present?
+      Projects::DeploymentJob.perform_later(@project.current_deployment)
+      redirect_to project_environment_variables_path(@project), notice: 'Deployment started to apply new environment variables.'
+    else
+      redirect_to project_environment_variables_path(@project), notice: 'Environment variables will be applied on the next deployment.'
+    end
   end
 
   private

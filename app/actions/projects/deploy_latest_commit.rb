@@ -15,6 +15,6 @@ class Projects::DeployLatestCommit
       commit_sha: commit.sha,
       commit_message: commit.commit[:message]
     )
-    Projects::BuildJob.perform_later(build.id)
+    Projects::BuildJob.perform_later(build)
   end
 end

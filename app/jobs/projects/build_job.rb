@@ -1,9 +1,8 @@
 class Projects::BuildJob < ApplicationJob
   queue_as :default
 
-  def perform(build_id)
+  def perform(build)
     # Ensure the project is loaded as an instance of the Project model
-    build = Build.find(build_id)
     project = build.project
 
     # Step 1: Run any predeploy commands if provided
@@ -106,7 +105,8 @@ class Projects::BuildJob < ApplicationJob
       end
 
       build.completed!
-      Projects::DeploymentJob.perform_later(build)
+      deployment = Deployment.create!(build:)
+      Projects::DeploymentJob.perform_later(deployment)
       # Step 7: Optionally, add post-deploy tasks or slack notifications
     rescue StandardError => e
       build.info "Build failed: #{e.message}"

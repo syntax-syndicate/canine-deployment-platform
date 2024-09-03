@@ -1,10 +1,10 @@
 class ProjectsController < ApplicationController
   include ProjectsHelper
-  before_action :set_project, only: [:show, :edit, :update, :destroy, :deploy]
+  before_action :set_project, only: [:show, :edit, :update, :destroy]
 
   # GET /projects
   def index
-    @pagy, @projects = pagy(Project.sort_by_params(params[:sort], sort_direction))
+    @pagy, @projects = pagy(current_user.projects.sort_by_params(params[:sort], sort_direction))
 
     # Uncomment to authorize with Pundit
     # authorize @projects

@@ -2,8 +2,7 @@ require 'base64'
 require 'json'
 
 class Projects::DeploymentJob < ApplicationJob
-  def perform(build)
-    deployment = Deployment.create!(build: build)
+  def perform(deployment)
     cluster_kubeconfig = deployment.project.cluster.kubeconfig
     project = deployment.project
     
