@@ -5,7 +5,7 @@ class Projects::EnvironmentVariablesController < Projects::BaseController
     @environment_variables = @project.environment_variables
   end
 
-  def update
+  def create
     result = EnvironmentVariables::BulkUpdate.execute(project: @project, params: params)
     if @project.current_deployment.present?
       Projects::DeploymentJob.perform_later(@project.current_deployment)

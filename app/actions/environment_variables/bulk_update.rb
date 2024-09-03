@@ -5,12 +5,15 @@ class EnvironmentVariables::BulkUpdate
 
   executed do |context|
     project = context.project
-    context.params[:environment_variables].each do |environment_variable_params|
+    # Delete all environment variables and create new ones
+
+    project.environment_variables.destroy_all
+
+    (context.params[:environment_variables] || []).each do |environment_variable_params|
+      next if environment_variable_params[:name].blank?
       name = environment_variable_params[:name].strip.upcase
       value = environment_variable_params[:value].strip
-      environment_variable = project.environment_variables.find_by(name:) || project.environment_variables.build(name:)
-      environment_variable.value = value
-      environment_variable.save!
+      project.environment_variables.create!(name:, value:)
     end
   end
 end
