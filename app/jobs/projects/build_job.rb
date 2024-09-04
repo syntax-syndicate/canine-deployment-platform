@@ -27,7 +27,7 @@ class Projects::BuildJob < ApplicationJob
         "git",
         "clone",
         "--depth", "1",
-        "--branch", build.sha,
+        "--branch", project.branch,
         "https://#{project.user.github_username}:#{project.user.github_access_token}@github.com/#{project.repository_url}.git",
         repository_path
       ]

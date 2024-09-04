@@ -7,6 +7,7 @@ class Clusters::InstallMetricServer
     cluster = context.cluster
     K8::Kubectl.new(cluster.kubeconfig).with_kube_config do |kubeconfig_file|
       # Check if metric server is already installed
+      cluster.info("Checking if metric server is already installed")
       exit_status = Cli::RunAndLog.new(cluster).call(
         "kubectl get deployment metrics-server -n kube-system",
         envs: {
@@ -14,8 +15,11 @@ class Clusters::InstallMetricServer
         },
       )
       if exit_status.success?
+        cluster.info("Metric server is already installed")
         next
       end
+
+      cluster.info("Metric server not detected, installing...")
       exit_status = Cli::RunAndLog.new(cluster).call(
         "kubectl apply -f #{Rails.root.join('resources', 'k8', 'shared', 'metrics_server.yaml')}",
         envs: {

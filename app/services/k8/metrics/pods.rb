@@ -1,7 +1,7 @@
 class K8::Metrics::Pods
-  def self.call(cluster)
+  def self.call(cluster, selector: nil)
     K8::Kubectl.new(cluster.kubeconfig).with_kube_config do |kubeconfig_file|
-      command = "kubectl top pods --kubeconfig #{kubeconfig_file.path}"
+      command = "kubectl top pods --kubeconfig #{kubeconfig_file.path} #{selector.present? ? "-l #{selector}" : ""}"
       output = `#{command}`
       parse_output(output)
     end

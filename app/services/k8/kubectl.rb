@@ -17,27 +17,18 @@ class K8::Kubectl
   end
 
   def apply_yaml(yaml_content)
-    with_kube_config do
+    with_kube_config do |kubeconfig_file|
       # Create a temporary file for the YAML content
       Tempfile.open(['k8s', '.yaml']) do |yaml_file|
         yaml_file.write(yaml_content)
         yaml_file.flush
 
         # Apply the YAML file to the cluster using the kubeconfig file
-        stdout, stderr, status = Open3.capture3("kubectl --kubeconfig=#{kubeconfig_file.path} apply -f #{yaml_file.path}")
-        
-        # Print the output and any errors to the console
-        puts "\n\n=== kubectl apply output ==="
-        puts stdout unless stdout.empty?
-        puts stderr unless stderr.empty?
-        puts "=== End of output ===\n"
-        unless status.success?
-          raise "Kubectl apply command failed: #{stderr}"
-        end
+        command = "kubectl --kubeconfig=#{kubeconfig_file.path} apply -f #{yaml_file.path}"
+        yield command
       end
     end
   end
-
 
   def run(command)
     with_kube_config do |kubeconfig_file|

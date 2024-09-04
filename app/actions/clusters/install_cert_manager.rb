@@ -5,7 +5,7 @@ class Clusters::InstallCertManager
 
   executed do |context|
     cluster = context.cluster
-    # Check if cert manager is already installed
+    cluster.info("Checking if cert manager is already installed")
     exit_status = Cli::RunAndLog.new(cluster).call(
       "kubectl get deployment ingress-nginx-controller",
       envs: {
@@ -13,8 +13,11 @@ class Clusters::InstallCertManager
       },
     )
     if exit_status.success?
+      cluster.info("Cert manager is already installed")
       next
     end
+
+    cluster.info("Cert manager not detected, installing...")
     K8::Kubectl.new(cluster.kubeconfig).with_kube_config do |kubeconfig_path|
       envs = {
         "KUBECONFIG" => kubeconfig_path.path,

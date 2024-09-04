@@ -5,7 +5,7 @@ class Projects::DomainsController < Projects::BaseController
     @domain = @project.domains.new(domain_params)
     respond_to do |format|
       if @domain.save
-        Projects::AddDomainJob.perform_later(@domain)
+        Projects::AddDomainJob.perform_later(@domain.cluster)
         format.html { redirect_to project_path(@project), notice: 'Domain was successfully added.' }
         format.json { render :show, status: :created, domain: @domain }
         format.turbo_stream

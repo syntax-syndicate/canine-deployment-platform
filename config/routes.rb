@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   end
   resources :add_ons
   resources :projects do
+    resources :metrics, only: [:index], module: :projects
     resources :project_add_ons, only: [:create, :destroy], module: :projects
     resources :environment_variables, only: [:index, :create], module: :projects
     resources :domains, only: [:create, :destroy], module: :projects

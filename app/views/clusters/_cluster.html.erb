@@ -2,6 +2,7 @@
   <div class="mb-4">
     <p class="text-sm font-medium text-gray-500">Name</p>
     <%= cluster.name %>
+    <%= render "log_outputs/logs", loggable: cluster %>
   </div>
   <% if action_name != "show" %>
     <%= link_to "View this cluster", cluster, class: "btn btn-secondary" %>
