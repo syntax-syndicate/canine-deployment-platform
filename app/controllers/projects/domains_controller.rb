@@ -1,24 +1,29 @@
 class Projects::DomainsController < Projects::BaseController
   before_action :set_project
 
-  def index
-    @domains = @project.domains
-  end
-
   def create
     @domain = @project.domains.new(domain_params)
-    if @domain.save
-      Projects::AddDomainJob.perform_later(@domain)
-      redirect_to project_path(@project), notice: 'Domain was successfully added.'
-    else
-      render :new
+    respond_to do |format|
+      if @domain.save
+        Projects::AddDomainJob.perform_later(@domain)
+        format.html { redirect_to project_path(@project), notice: 'Domain was successfully added.' }
+        format.json { render :show, status: :created, domain: @domain }
+        format.turbo_stream
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @domain.errors, status: :unprocessable_entity }
+        format.turbo_stream
+      end
     end
   end
 
   def destroy
     @domain = @project.domains.find(params[:id])
     @domain.destroy
-    redirect_to project_path(@project), notice: 'Domain was successfully removed.'
+
+    respond_to do |format|
+      format.turbo_stream
+    end
   end
 
   private

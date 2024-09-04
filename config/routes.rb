@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :projects do
     resources :project_add_ons, only: [:create, :destroy], module: :projects
     resources :environment_variables, only: [:index, :create], module: :projects
+    resources :domains, only: [:create, :destroy], module: :projects
     resources :deployments, only: [:index, :show], module: :projects do
       collection do
         post :deploy

@@ -1,0 +1,6 @@
+<% project.domains.each do |domain| %>
+  <div id="<%= dom_id(domain) %>">
+    <%= domain.domain_name %>
+    <%= button_to "Remove", project_domain_path(project, domain), method: :delete, class: "btn btn-secondary", data: { turbo_frame: "domains" } %>
+  </div>
+<% end %>
