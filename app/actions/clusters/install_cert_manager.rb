@@ -5,22 +5,22 @@ class Clusters::InstallCertManager
 
   executed do |context|
     cluster = context.cluster
-    cluster.info("Checking if cert manager is already installed")
-    exit_status = Cli::RunAndLog.new(cluster).call(
-      "kubectl get deployment ingress-nginx-controller",
-      envs: {
-        "KUBECONFIG" => kubeconfig_path.path,
-      },
-    )
-    if exit_status.success?
-      cluster.info("Cert manager is already installed")
-      next
-    end
+    K8::Kubectl.new(cluster.kubeconfig).with_kube_config do |kubeconfig_file|
+      cluster.info("Checking if cert manager is already installed")
+      exit_status = Cli::RunAndLog.new(cluster).call(
+        "kubectl get deployment ingress-nginx-controller",
+        envs: {
+          "KUBECONFIG" => kubeconfig_file.path,
+        },
+      )
+      if exit_status.success?
+        cluster.info("Cert manager is already installed")
+        next
+      end
+      cluster.info("Cert manager not detected, installing...")
 
-    cluster.info("Cert manager not detected, installing...")
-    K8::Kubectl.new(cluster.kubeconfig).with_kube_config do |kubeconfig_path|
       envs = {
-        "KUBECONFIG" => kubeconfig_path.path,
+        "KUBECONFIG" => kubeconfig_file.path,
       }
 
       # Construct the command

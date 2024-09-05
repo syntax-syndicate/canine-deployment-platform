@@ -25,6 +25,7 @@ Rails.application.routes.draw do
     resource :metrics, only: [:show], module: :clusters
     member do
       post :test_connection
+      post :restart
     end
   end
   draw :accounts

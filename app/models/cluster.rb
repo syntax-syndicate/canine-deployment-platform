@@ -7,14 +7,9 @@ class Cluster < ApplicationRecord
   has_many :domains, through: :projects
   validates_presence_of :name
   enum status: {
-    initializing: 1,
-    installing: 2,
-    running: 3,
-    failed: 4,
+    initializing: 0,
+    installing: 1,
+    running: 2,
+    failed: 3,
   }
-
-  # Set up a cluster
-  def self.install(cluster)
-    # Run the install_cert_manager.sh script
-  end
 end
