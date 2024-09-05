@@ -17,9 +17,6 @@ Rails.application.routes.draw do
         post :redeploy
       end
     end
-    resource :shell, only: [:show, :create, :destroy], module: :projects do
-      post :input, on: :collection
-    end
   end
   resources :clusters do
     resource :metrics, only: [:show], module: :clusters
