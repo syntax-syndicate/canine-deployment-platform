@@ -1,16 +1,29 @@
 <div class="container px-4 mx-auto my-8">
   <div class="flex items-center justify-between mb-4">
-    <h1 class="h3">
-      <%= link_to "Projects", projects_path, class: "text-black dark:text-white" %>
-      <span class="text-gray-400 font-light mx-2">\</span>
-      <%= project.name %>
-    </h1>
+    <div>
+      <span class="text-xs font-semibold">
+        <i class="bi bi-globe"></i>
+        <%= project.project_type.titleize.upcase %>
+      </span>
+      <h1 class="h3">
+        <%= project.name %>
+      </h1>
+      <div class="text-sm">
+        <%= link_to project.full_repository_url, target: "_blank" do %>
+          <i class="bi bi-github"></i>
+          <span class="underline"><%= project.repository_url %></span>
+          <i class="bi bi-git ml-2"></i>
+          <span class="underline"><%= project.branch %></span>
+        <% end %>
+        <span class="ml-6"><i class="bi bi-diagram-3"></i> <%= link_to project.cluster.name, project.cluster, target: "_blank", class: "underline" %></span>
+      </div>
+    </div>
     <div class="flex">
-      <%= button_to "Restart", restart_cluster_url(project.cluster), class: "btn btn-secondary m-1", data: { turbo: false, disable_with: "Loading..." } %>
+      <%= button_to "Restart", restart_cluster_url(project.cluster), class: "btn btn-ghost m-1", data: { turbo: false, disable_with: "Loading..." } %>
       <%= button_to "Deploy", deploy_project_deployments_url(project), class: "btn btn-primary m-1", data: { turbo: false, disable_with: "Loading..." } %>
     </div>
   </div>
-  <div class="p-8 bg-white dark:bg-gray-900 dark:border dark:border-gray-700 rounded shadow">
+  <div class="p-8 dark:border border-base-300 bg-gray-900 rounded-b-box  rounded shadow">
     <div class="container mx-auto flex">
       <!-- Sidebar -->
       <%= render "projects/sidebar", project: project %>

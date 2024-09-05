@@ -30,4 +30,8 @@ class Project < ApplicationRecord
   def repository_name
     repository_url.split('/').last
   end
+
+  def full_repository_url
+    "https://github.com/#{repository_url}"
+  end
 end

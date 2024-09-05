@@ -11,13 +11,18 @@ class Projects::DeploymentJob < ApplicationJob
     upload_registry_secrets(kubectl, deployment)
     
     deployment_yaml = K8::Stateless::Deployment.new(project).to_yaml
-    service_yaml = K8::Stateless::Service.new(project).to_yaml
     kubectl.apply_yaml(deployment_yaml) do |command|
       Cli::RunAndLog.new(deployment).call(command)
     end
 
-    kubectl.apply_yaml(service_yaml) do |command|
+    unless project.background_service?
+      service_yaml = K8::Stateless::Service.new(project).to_yaml
+      kubectl.apply_yaml(service_yaml) do |command|
       Cli::RunAndLog.new(deployment).call(command)
+    end
+
+    if project.web_service?
+      # TODO: Set up ingress
     end
 
     deployment.completed!

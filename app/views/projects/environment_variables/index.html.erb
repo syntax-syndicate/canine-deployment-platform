@@ -8,7 +8,7 @@
     
     <%= form_with(url: project_environment_variables_path(@project), method: :post, class: "space-y-4") do |form| %>
       <div data-environment-variables-target="container"></div>
-      <button class="btn btn-secondary btn-outline" data-action="environment-variables#add">Add New Environment Variable</button>
+      <button class="btn btn-neutral btn-outline" data-action="environment-variables#add">Add New Environment Variable</button>
       <%= form.submit "Save", class: "btn btn-primary" %>
     <% end %>
     
