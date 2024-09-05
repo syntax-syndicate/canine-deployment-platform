@@ -6,28 +6,20 @@
  * Remove these if you'd like to use TailwindUI which expects a clean slate
 */
 @import "components/base";
-@import "components/actiontext";
 @import "components/alert";
 @import "components/animation";
-@import "components/announcements";
 @import "components/avatars";
 @import "components/buttons";
-@import "components/code";
 @import "components/connected_accounts";
-@import "components/direct_uploads";
 @import "components/docs";
 @import "components/forms";
-@import "components/iframe";
 @import "components/modal";
 @import "components/nav";
 @import "components/notifications";
-@import "components/pagination";
 @import "components/strada";
 @import "components/tabs";
-@import "components/trix";
 @import "components/typography";
 @import "components/util";
-@import "components/braintree";
 
 @import "tailwindcss/utilities";
 

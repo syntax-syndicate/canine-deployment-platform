@@ -1,8 +1,3 @@
-/* Tells browser to use dark mode scroll bars, etc */
-.dark {
-  color-scheme: dark;
-}
-
 body {
   display: flex;
   flex-direction: column;
@@ -10,20 +5,13 @@ body {
   /* mobile viewport bug fix */
   min-height: -webkit-fill-available;
 }
-
 .main {
   flex: 1;
 }
 
-a {
-  @apply text-primary-600;
-
-  &:hover,
-  &:focus {
-    @apply text-primary-500;
-
-    transform: none;
-  }
+.link-unstyled, .link-unstyled:link, .link-unstyled:hover {
+  color: inherit;
+  text-decoration: inherit;
 }
 
 ul {

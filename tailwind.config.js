@@ -11,6 +11,7 @@ module.exports = {
     require('@tailwindcss/aspect-ratio'),
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
+    require('daisyui'),
   ],
 
   content: [
@@ -23,8 +24,6 @@ module.exports = {
     './lib/jumpstart/app/views/**/*.erb',
     './lib/jumpstart/app/helpers/**/*.rb',
   ],
-
-  // All the default values will be compiled unless they are overridden below
   theme: {
     // Extend (add to) the default theme in the `extend` key
     extend: {
@@ -34,7 +33,6 @@ module.exports = {
         secondary: colors.emerald,
         tertiary: colors.gray,
         danger: colors.red,
-        gray: colors.neutral,
         "code-400": "#fefcf9",
         "code-600": "#3c455b",
       },
@@ -43,6 +41,7 @@ module.exports = {
       },
     },
   },
+
 
   // Opt-in to TailwindCSS future changes
   future: {
