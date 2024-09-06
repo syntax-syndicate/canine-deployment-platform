@@ -3,7 +3,7 @@
   line-height: 30px;
 
   &.active {
-    @apply font-semibold;
+    @apply font-semibold border-b-2 border-white;
   }
 
   &:focus {

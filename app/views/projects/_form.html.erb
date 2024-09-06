@@ -15,11 +15,14 @@
       <b>Web service</b>: Useful for publicly accessible services like web applications.
     </p>
     <p>
-      <b>Internal service</b>: Useful for services that should only be accessed within the cluster like databases.
+      <b>Internal service</b>: Useful for services that should only be connected to within the cluster like microservices.
     </p>
     <p>
       <b>Process</b>: Useful for services that should don't need to be connected to like background workers & cron jobs.
     </p>
+    <div class="mt-4 text-warning italic">
+      Do not create any databases here, create an <%= link_to "add on", add_ons_path %> and then connect it to your project.
+    </div>
   </div>
 
   <div class="form-group">

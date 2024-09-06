@@ -20,6 +20,7 @@
 @import "components/tabs";
 @import "components/typography";
 @import "components/util";
+@import "components/custom";
 
 @import "tailwindcss/utilities";
 

@@ -8,6 +8,14 @@
       <h1 class="h3">
         <%= project.name %>
       </h1>
+      <% if project.domains.any? %>
+        <div class="my-3">
+          <% project.domains.each do |domain| %>
+            <%= link_to domain.domain_name, "https://#{domain.domain_name}", target: "_blank" %>
+            <i class="bi bi-box-arrow-up-right"></i>
+          <% end %>
+        </div>
+      <% end %>
       <div class="text-sm">
         <%= link_to project.full_repository_url, target: "_blank" do %>
           <i class="bi bi-github"></i>
