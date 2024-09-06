@@ -5,7 +5,7 @@ class Cli::RunAndLog
 
   def call(command, envs: {})
     command = envs.map { |k, v| "#{k}=#{v}" }.join(" ") + " #{command}"
-    @loggable.info("Running command: `#{command}`")
+    @loggable.info("`#{command.strip}`")
     Open3.popen3(command) do |stdin, stdout, stderr, wait_thr|
       stdin.close
       out_reader = Thread.new do
