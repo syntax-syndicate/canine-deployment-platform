@@ -46,12 +46,18 @@ class Projects::BuildJob < ApplicationJob
       docker_build_command = [
         "docker", "build",
         "-t", project.container_registry_url,
-        "-f", File.join(repository_path, project.dockerfile_path),
-        File.join(repository_path, project.docker_build_context_directory)
+        "-f", File.join(repository_path, project.dockerfile_path)
       ]
 
+      # Add environment variables to the build command
+      project.environment_variables.each do |key, value|
+        docker_build_command.push("--build-arg", "#{key}=#{value}")
+      end
+
+      # Add the build context directory at the end
+      docker_build_command.push(File.join(repository_path, project.docker_build_context_directory))
+
       # Step 4: Execute the Docker build command
-      build.info "Running Docker build command: #{docker_build_command.join(' ')}"
       IO.popen(docker_build_command, "r") do |io|
         # Continuously read each line of output
         io.each do |line|
@@ -64,6 +70,8 @@ class Projects::BuildJob < ApplicationJob
       
         if exit_status != 0
           build.info "Command failed with exit status #{exit_status}"
+          build.failed!
+          return
         else
           build.info "Command completed successfully."
         end
