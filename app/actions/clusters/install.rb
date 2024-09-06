@@ -5,7 +5,9 @@ class Clusters::Install
     cluster.installing!
     result = with(cluster:).reduce(
       Clusters::IsReady,
-      Clusters::InstallCertManager,
+      Clusters::InstallNginxIngress,
+      Clusters::InstallAcmeIssuer,
+      Clusters::InstallMetricServer,
     )
     cluster.running! if result.success?
     cluster.failed! if result.failure?

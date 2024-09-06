@@ -1,7 +1,8 @@
 class K8::Kubectl
-  attr_reader :kubeconfig
-  def initialize(kubeconfig)
+  attr_reader :kubeconfig, :runner
+  def initialize(kubeconfig, runner)
     @kubeconfig = kubeconfig
+    @runner = runner
   end
 
   def self.from_project(project)
@@ -25,21 +26,15 @@ class K8::Kubectl
 
         # Apply the YAML file to the cluster using the kubeconfig file
         command = "kubectl --kubeconfig=#{kubeconfig_file.path} apply -f #{yaml_file.path}"
-        yield command
+        runner.(command)
       end
     end
   end
 
-  def run(command, runner: nil)
+  def call(command)
     with_kube_config do |kubeconfig_file|
       full_command = "kubectl --kubeconfig=#{kubeconfig_file.path} #{command}"
-      if runner.present?
-        runner.call(full_command)
-      else
-        Rails.logger.info("Running command: #{full_command}")
-        stdout, stderr, status = Open3.capture3(full_command)
-        return stdout, stderr, status
-      end
+      runner.(full_command)
     end
   end
 end

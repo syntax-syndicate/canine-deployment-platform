@@ -2,6 +2,6 @@ class InstallClusterJob < ApplicationJob
   queue_as :default
 
   def perform(cluster)
-    Cluster.install(cluster)
+    Clusters::Install.execute(cluster:)
   end
 end

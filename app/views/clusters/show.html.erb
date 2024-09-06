@@ -10,9 +10,9 @@
     </h1>
     <div class="flex">
       <%= turbo_frame_tag "test_connection_frame" do %>
-        <%= button_to "Test Connection", test_connection_cluster_path(@cluster), class: "btn btn-info btn-outline" %>
+        <%= button_to "Test Connection", test_connection_cluster_path(@cluster), class: "btn btn-ghost m-1" %>
       <% end %>
-      <%= link_to t("edit"), edit_cluster_path(@cluster), class: "btn btn-secondary" %>
+      <%= link_to t("edit"), edit_cluster_path(@cluster), class: "btn btn-secondary m-1" %>
     </div>
   </div>
 
