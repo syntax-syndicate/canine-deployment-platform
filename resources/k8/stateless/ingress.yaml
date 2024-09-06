@@ -1,9 +1,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: <%= cluster_name %>-ingress
+  name: <%= project.name %>-ingress
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    cert-manager.io/cluster-issuer: "letsencrypt"
 spec:
   ingressClassName: "nginx"
   tls:
@@ -21,7 +21,7 @@ spec:
         path: "/"
         backend:
           service:
-            name: <%= domain.project.name %>-service
+            name: <%= project.name %>-service
             port:
               number: 80
   <% end %>

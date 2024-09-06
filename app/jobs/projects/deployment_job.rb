@@ -13,16 +13,23 @@ class Projects::DeploymentJob < ApplicationJob
     deployment_yaml = K8::Stateless::Deployment.new(project).to_yaml
     kubectl.apply_yaml(deployment_yaml) do |command|
       Cli::RunAndLog.new(deployment).call(command)
+      # Need to run kubectl rollout restart deployment/quiet-deer-deployment
     end
+    kubectl.run("rollout restart deployment/#{project.name}-deployment", runner: Cli::RunAndLog.new(deployment))
 
     unless project.background_service?
       service_yaml = K8::Stateless::Service.new(project).to_yaml
       kubectl.apply_yaml(service_yaml) do |command|
-      Cli::RunAndLog.new(deployment).call(command)
+        Cli::RunAndLog.new(deployment).call(command)
+      end
     end
 
     if project.web_service?
       # TODO: Set up ingress
+      ingress_yaml = K8::Stateless::Ingress.new(project).to_yaml
+      kubectl.apply_yaml(ingress_yaml) do |command|
+        Cli::RunAndLog.new(deployment).call(command)
+      end
     end
 
     deployment.completed!

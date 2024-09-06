@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: <%= name %>
-        image: <%= container_registry %>:latest
+        image: <%= project.container_registry_url %>
         imagePullPolicy: Always
         env:
         <% environment_variables.each do |env| %>
@@ -25,3 +25,5 @@ spec:
         <% end %>
         ports:
         - containerPort: <%= port %>
+      imagePullSecrets:
+      - name: dockerconfigjson-github-com

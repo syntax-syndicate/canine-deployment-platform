@@ -30,12 +30,16 @@ class K8::Kubectl
     end
   end
 
-  def run(command)
+  def run(command, runner: nil)
     with_kube_config do |kubeconfig_file|
       full_command = "kubectl --kubeconfig=#{kubeconfig_file.path} #{command}"
-      Rails.logger.info("Running command: #{full_command}")
-      stdout, stderr, status = Open3.capture3(full_command)
-      return stdout, stderr, status
+      if runner.present?
+        runner.call(full_command)
+      else
+        Rails.logger.info("Running command: #{full_command}")
+        stdout, stderr, status = Open3.capture3(full_command)
+        return stdout, stderr, status
+      end
     end
   end
 end

@@ -22,17 +22,15 @@ module InboundWebhooks
       user = User.find_by(email: body['pusher']['email'])
       return if user.nil?
       branch = body['ref'].gsub('refs/heads/', '')
-      projects = user.projects.where(repository_url: body['repository']['full_name'], branch: branch, auto_deploy: true)
+      projects = user.projects.where(repository_url: body['repository']['full_name'], branch: branch, autodeploy: true)
       projects.each do |project|
         # Trigger a docker build & docker deploy
-        if project.auto_deploy
-          build = Build.create!(
-            project_id: project.id,
-            commit_sha: body['head_commit']['id'],
-            commit_message: body['head_commit']['message']
-          )
-          Projects::BuildJob.perform_later(build)
-        end
+        build = Build.create!(
+          project_id: project.id,
+          commit_sha: body['head_commit']['id'],
+          commit_message: body['head_commit']['message']
+        )
+        Projects::BuildJob.perform_later(build)
       end
     end
   end

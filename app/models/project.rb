@@ -34,4 +34,8 @@ class Project < ApplicationRecord
   def full_repository_url
     "https://github.com/#{repository_url}"
   end
+
+  def container_registry_url
+    "ghcr.io/#{repository_url}:latest"
+  end
 end

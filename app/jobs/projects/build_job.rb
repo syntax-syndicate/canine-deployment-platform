@@ -45,7 +45,7 @@ class Projects::BuildJob < ApplicationJob
       # Step 3: Construct the Docker build command
       docker_build_command = [
         "docker", "build",
-        "-t", "ghcr.io/#{project.repository_url}:latest",
+        "-t", project.container_registry_url,
         "-f", File.join(repository_path, project.dockerfile_path),
         File.join(repository_path, project.docker_build_context_directory)
       ]

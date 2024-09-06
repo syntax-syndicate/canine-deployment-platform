@@ -28,7 +28,8 @@ class Clusters::InstallCertManager
       exit_status = Cli::RunAndLog.new(cluster).call(command, envs: envs)
       if exit_status.success?
       else
-        cluster.fail!
+        cluster.failed!
+        cluster.info("Cert manager failed to install")
         context.fail!("Script failed with exit code #{exit_status.exitstatus}")
       end
     end

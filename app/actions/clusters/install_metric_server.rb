@@ -29,7 +29,7 @@ class Clusters::InstallMetricServer
       if exit_status.success?
         cluster.info("Metric server installed")
       else
-        cluster.fail!
+        cluster.failed!
         cluster.info("Metric server failed to install")
         context.fail!("Failed to install metric server")
       end
