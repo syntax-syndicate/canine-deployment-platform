@@ -7,6 +7,9 @@ class Project < ApplicationRecord
   has_many :builds, dependent: :destroy
   has_many :deployments, through: :builds
   validates :name, presence: true, format: { with: /\A[a-z0-9_-]+\z/, message: "must be lowercase, numbers, hyphens, and underscores only" }
+  has_one :cron_schedule
+  validates :cron_schedule, presence: true, if: :cron_job?
+  validates :command, presence: true, if: :cron_job?
 
   enum status: {
     created: 0,
@@ -17,6 +20,7 @@ class Project < ApplicationRecord
     web_service: 0,
     internal_service: 1,
     background_service: 2,
+    cron_job: 3,
   }
 
   def current_deployment

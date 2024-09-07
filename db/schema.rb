@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_06_042735) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_07_164422) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -180,6 +180,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_06_042735) do
     t.string "access_token_secret"
     t.string "owner_type"
     t.index ["owner_id", "owner_type"], name: "index_connected_accounts_on_owner_id_and_owner_type"
+  end
+
+  create_table "cron_schedules", force: :cascade do |t|
+    t.string "schedule", null: false
+    t.bigint "project_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_cron_schedules_on_project_id"
   end
 
   create_table "deployments", force: :cascade do |t|
@@ -578,6 +586,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_06_042735) do
   add_foreign_key "api_tokens", "users"
   add_foreign_key "builds", "projects"
   add_foreign_key "clusters", "users"
+  add_foreign_key "cron_schedules", "projects"
   add_foreign_key "deployments", "builds"
   add_foreign_key "deploys", "builds"
   add_foreign_key "deploys", "projects"

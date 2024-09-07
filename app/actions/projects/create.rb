@@ -1,8 +1,9 @@
 class Projects::Create
   extend LightService::Organizer
 
-  def self.call(project)
-    with(project:).reduce(
+  def self.call(project, params)
+    with(project:, params:).reduce(
+      Projects::CreateAssociations,
       Projects::ValidateGithubRepository,
       Projects::Save,
       Projects::RegisterGithubWebhook,
