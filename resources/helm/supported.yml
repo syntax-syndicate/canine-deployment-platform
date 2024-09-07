@@ -1,0 +1,37 @@
+helm:
+  charts:
+    - name: postgresql
+      logo: /images/helm/postgresql.png
+      version: 12.11.0
+      repository: https://charts.bitnami.com/bitnami
+    - name: redis
+      logo: /images/helm/redis.png
+      version: 18.10.0
+      repository: https://charts.bitnami.com/bitnami
+    - name: elasticsearch
+      logo: /images/helm/elasticsearch.png
+      version: 18.10.0
+      repository: https://charts.bitnami.com/bitnami
+    #- name: sentry
+    #  logo: /images/helm/sentry.png
+    #  version: 2.10.0
+    #  repository: https://sentry-kubernetes.github.io/charts
+    #- name: grafana
+    #  logo: /images/helm/grafana.png
+    #  version: 6.56.0
+    #  repository: https://grafana.github.io/helm-charts
+    #- name: prometheus
+    #  logo: /images/helm/prometheus.png
+    #  version: 16.1.0
+    #  repository: https://prometheus-community.github.io/helm-charts
+    #- name: superset
+    #  logo: /images/helm/superset.png
+    #  version: 0.6.1
+    #  repository: https://apache.github.io/superset
+    #- name: clickhouse
+    #  logo: /images/helm/clickhouse.png
+    #  version: 2.1.0
+    #  repository: https://clickhouse.github.io/clickhouse-helm
+    #- name: wordpress
+    #  version: 12.1.0
+    #  repository: https://charts.bitnami.com/bitnami

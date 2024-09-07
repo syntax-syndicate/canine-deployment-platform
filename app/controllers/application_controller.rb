@@ -15,4 +15,5 @@ class ApplicationController < ActionController::Base
   include Users::NavbarNotifications
   include Users::Sudo
   include Users::TimeZone
+  before_action :authenticate_user!
 end
