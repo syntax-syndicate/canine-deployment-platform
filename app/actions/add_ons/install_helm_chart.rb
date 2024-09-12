@@ -4,15 +4,17 @@ class AddOns::InstallHelmChart
 
   executed do |context|
     add_on = context.add_on
-    K8::Kubectl.new(add_on.cluster.kubeconfig).with_kube_config do |kubeconfig_file|
-      command = "helm install #{add_on.name} #{add_on.helm_chart_url}"
-      exit_status = Cli::RunAndLog.new(add_on).call(command, envs: { "KUBECONFIG" => kubeconfig_file.path })
-      if exit_status.success?
-        add_on.installed!
-      else
-        add_on.failed!
-        context.fail!("Script failed with exit code #{exit_status.exitstatus}")
-      end
+    add_on.installing!
+    charts = YAML.load_file(Rails.root.join('resources', 'helm', 'charts.yml'))['helm']['charts']
+    chart = charts.find { |chart| chart['name'] == add_on.chart_type }
+    add_on.helm_chart_url = chart['repository']
+    # First, check if the chart is already installed & running
+    client = K8::Helm::Client.new(add_on.cluster.kubeconfig, Cli::RunAndLog.new(add_on))
+    charts = client.ls
+    if charts.any? { |chart| chart.name == add_on.name }
+    else
+      charts = client.install(add_on.name, add_on.helm_chart_url)
     end
+    add_on.installed!
   end
 end

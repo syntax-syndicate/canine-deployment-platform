@@ -13,8 +13,8 @@
       <tr class="border-b border-gray-200">
         <td class="py-4"><%= link_to add_on.name, add_on, class: "text-inherit hover:underline" %></td>
         <td class="py-4"><%= link_to add_on.cluster.name, add_on.cluster, class: "text-inherit hover:underline" %></td>
-        <td class="py-4"><%= add_on.status %></td>
-        <td class="py-4"><%= add_on.friendly_helm_chart_url %></td>
+        <td class="py-4"><%= render "add_ons/status", add_on: %></td>
+        <td class="py-4"><%= add_on.chart_type %></td>
         <td class="py-4"><%= time_ago_in_words(add_on.created_at) %> ago</td>
       </tr>
     <% end %>

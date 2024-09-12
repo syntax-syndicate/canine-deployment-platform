@@ -8,15 +8,22 @@ class AddOn < ApplicationRecord
     uninstalled: 3,
     failed: 4,
   }
+  validates :chart_type, presence: true
+  validate :chart_type_exists
   validates :name, presence: true, format: { with: /\A[a-z0-9_-]+\z/, message: "must be lowercase, numbers, hyphens, and underscores only" }
 
-  def friendly_helm_chart_url
-    # Just get the path from the URL and remove the leading /
-    path = URI.parse(helm_chart_url).path[1..]
-    path
+  protected
+
+  def chart_definition
+    charts = YAML.load_file(Rails.root.join('resources', 'helm', 'charts.yml'))['helm']['charts']
+    charts.find { |chart| chart['name'] == chart_type }
   end
 
-  protected
+  def chart_type_exists
+    if chart_definition.nil?
+      errors.add(:chart_type, "does not exist")
+    end
+  end
 
   def validate_keys(required_keys)
     missing_keys = required_keys - metadata.keys

@@ -10,8 +10,11 @@ export default class extends Controller {
 
   selectChart(event) {
     event.preventDefault()
-    this.inputTarget.value = event.currentTarget.dataset.newAddOnsRepositoryValue
+    this.inputTarget.value = event.currentTarget.dataset.chartName
     this.cardTargets.forEach(card => card.classList.remove('ring', 'ring-primary'))
     event.currentTarget.classList.add('ring', 'ring-primary')
+    // Show Input
+    this.element.querySelectorAll('.chart-form').forEach(form => form.classList.add('hidden'))
+    document.getElementById(`chart-${event.currentTarget.dataset.chartName}`).classList.remove("hidden");
   }
 }

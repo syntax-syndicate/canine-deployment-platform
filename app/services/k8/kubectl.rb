@@ -1,5 +1,7 @@
 class K8::Kubectl
+  include K8::Kubeconfig
   attr_reader :kubeconfig, :runner
+
   def initialize(kubeconfig, runner)
     @kubeconfig = kubeconfig
     @runner = runner
@@ -7,14 +9,6 @@ class K8::Kubectl
 
   def self.from_project(project)
     new(project.cluster.kubeconfig)
-  end
-
-  def with_kube_config
-    Tempfile.open(['kubeconfig', '.yaml']) do |kubeconfig_file|
-      kubeconfig_file.write(kubeconfig.to_yaml)
-      kubeconfig_file.flush
-      yield kubeconfig_file
-    end
   end
 
   def apply_yaml(yaml_content)

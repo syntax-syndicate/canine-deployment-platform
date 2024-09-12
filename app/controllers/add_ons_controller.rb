@@ -33,7 +33,7 @@ class AddOnsController < ApplicationController
 
     respond_to do |format|
       if @add_on.save
-        AddOns::InstallJob.perform_later(@add_on.id)
+        AddOns::InstallJob.perform_later(@add_on)
         format.html { redirect_to @add_on, notice: "Add on was successfully created." }
         format.json { render :show, status: :created, location: @add_on }
       else
@@ -58,9 +58,10 @@ class AddOnsController < ApplicationController
 
   # DELETE /add_ons/1 or /add_ons/1.json
   def destroy
-    @add_on.destroy!
+    @add_on.uninstalling!
     respond_to do |format|
-      format.html { redirect_to add_ons_url, status: :see_other, notice: "Add on was successfully destroyed." }
+      AddOns::UninstallJob.perform_later(@add_on)
+      format.html { redirect_to add_ons_url, status: :see_other, notice: "Uninstalling add on #{@add_on.name}" }
       format.json { head :no_content }
     end
   end
@@ -79,7 +80,7 @@ class AddOnsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def add_on_params
-    params.require(:add_on).permit(:cluster_id, :helm_chart_url, :name, :metadata)
+    params.require(:add_on).permit(:cluster_id, :chart_type, :name, :metadata)
 
     # Uncomment to use Pundit permitted attributes
     # params.require(:add_on).permit(policy(@add_on).permitted_attributes)

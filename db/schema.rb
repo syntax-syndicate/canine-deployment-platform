@@ -99,7 +99,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_07_164422) do
   create_table "add_ons", force: :cascade do |t|
     t.bigint "cluster_id", null: false
     t.string "name", null: false
-    t.string "helm_chart_url", null: false
+    t.string "chart_type", null: false
     t.integer "status", default: 0, null: false
     t.jsonb "metadata", default: {}
     t.datetime "created_at", null: false
