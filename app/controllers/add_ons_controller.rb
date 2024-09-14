@@ -11,6 +11,11 @@ class AddOnsController < ApplicationController
 
   # GET /add_ons/1 or /add_ons/1.json
   def show
+    if @add_on.chart_type == "redis"
+      @service = K8::Helm::Redis.new(@add_on)
+    elsif @add_on.chart_type == "postgresql"
+      @service = K8::Helm::Postgresql.new(@add_on)
+    end
   end
 
   # GET /add_ons/new

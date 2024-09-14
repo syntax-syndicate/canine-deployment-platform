@@ -12,6 +12,10 @@ class AddOn < ApplicationRecord
   validate :chart_type_exists
   validates :name, presence: true, format: { with: /\A[a-z0-9_-]+\z/, message: "must be lowercase, numbers, hyphens, and underscores only" }
 
+  def helm_chart_url
+    chart_definition['repository']
+  end
+
   protected
 
   def chart_definition

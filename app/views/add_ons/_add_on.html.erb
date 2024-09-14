@@ -1,22 +1,13 @@
 <div id="<%= dom_id add_on %>">
-  <div class="mb-4">
-    <p class="text-sm font-medium text-gray-500">Cluster</p>
-    <%= add_on.cluster_id %>
-  </div>
-  <div class="mb-4">
-    <p class="text-sm font-medium text-gray-500">Helm Chart</p>
-    <%= add_on.chart_type %>
-  </div>
-  <div class="mb-4">
-    <p class="text-sm font-medium text-gray-500">Name</p>
-    <%= add_on.name %>
-  </div>
-  <div class="mb-4">
-    <p class="text-sm font-medium text-gray-500">Metadata</p>
-    <%= add_on.metadata %>
-  </div>
-  <%= render "log_outputs/logs", loggable: add_on %>
-  <% if action_name != "show" %>
-    <%= link_to "View this add on", add_on, class: "btn btn-secondary" %>
+  <% if add_on.installing? %>
+    <div class="flex flex-col items-center justify-center">
+      <%= render "add_ons/installing" %>
+      <div class="mt-4 text-xl">
+        Your add-on is installing...
+      </div>
+    </div>
   <% end %>
+  <div class="mt-4">
+    <%= render "log_outputs/logs", loggable: add_on %>
+  </div>
 </div>

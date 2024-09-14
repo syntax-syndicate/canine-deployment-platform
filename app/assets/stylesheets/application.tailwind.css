@@ -21,6 +21,7 @@
 @import "components/typography";
 @import "components/util";
 @import "components/custom";
+@import "components/pacman";
 
 @import "tailwindcss/utilities";
 
