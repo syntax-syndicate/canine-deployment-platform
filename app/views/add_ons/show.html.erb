@@ -8,7 +8,7 @@
         <%= @add_on.name %>
       </h1>
       <div class="flex flex-row">
-        <%= @add_on.cluster.name %>
+        <%= link_to @add_on.cluster.name, cluster_path(@add_on.cluster), class: "mr-2" %>
         <%= @add_on.chart_type %>
       </div>
       <% if @add_on.installed? %>

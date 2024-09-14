@@ -19,6 +19,9 @@ Rails.application.routes.draw do
     end
   end
   resources :clusters do
+    member do
+      get :download_kubeconfig
+    end
     resource :metrics, only: [:show], module: :clusters
     member do
       post :test_connection

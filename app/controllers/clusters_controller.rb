@@ -1,5 +1,5 @@
 class ClustersController < ApplicationController
-  before_action :set_cluster, only: [:show, :edit, :update, :destroy, :test_connection]
+  before_action :set_cluster, only: [:show, :edit, :update, :destroy, :test_connection, :download_kubeconfig]
 
   # GET /clusters
   def index
@@ -37,6 +37,10 @@ class ClustersController < ApplicationController
     else
       render turbo_stream: turbo_stream.replace("test_connection_frame", partial: "clusters/connection_failed")
     end
+  end
+
+  def download_kubeconfig
+    send_data @cluster.kubeconfig, filename: "#{@cluster.name}-kubeconfig.yml", type: "application/yaml"
   end
 
   # POST /clusters or /clusters.json

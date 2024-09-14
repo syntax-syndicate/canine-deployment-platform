@@ -1,5 +1,13 @@
 module Cli
   class CommandFailedError < StandardError; end
+  class RunAndReturnOutput
+    def call(command, envs: {})
+      command = envs.map { |k, v| "#{k}=#{v}" }.join(" ") + " #{command}"
+      output = `#{command}`
+      output
+    end
+  end
+
   class RunAndLog
     def initialize(loggable)
       @loggable = loggable

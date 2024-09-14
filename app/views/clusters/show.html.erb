@@ -20,4 +20,5 @@
     <%= render @cluster %>
   </div>
   <%= link_to "Metrics", cluster_metrics_path(@cluster) %>
+  <%= link_to "Download Kubeconfig File", download_kubeconfig_cluster_path(@cluster) %>
 </div>
