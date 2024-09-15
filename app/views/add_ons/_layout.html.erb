@@ -19,16 +19,6 @@
           <%= link_to @add_on.cluster.name, cluster_path(@add_on.cluster), class: "mr-2" %>
           <%= @add_on.chart_type %>
         </div>
-        <% if @add_on.installed? %>
-          <div>
-            Internal URL: <a><%= @service.internal_url %></a> <i class="bi bi-copy cursor-pointer" data-controller="clipboard" data-clipboard-text="<%= @service.internal_url %>"></i>
-          </div>
-          <% if @service.has_external_url? %>
-            <div>
-              External URL: <a><%= @service.external_url %></a> <i class="bi bi-copy cursor-pointer"></i>
-            </div>
-          <% end %>
-        <% end %>
       </div>
     </div>
 

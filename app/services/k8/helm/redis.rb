@@ -37,6 +37,11 @@ class K8::Helm::Redis < K8::Helm::Service
       }
     end
   end
+
+  def version
+    services = K8::Helm::Client.new(add_on.cluster.kubeconfig, Cli::RunAndReturnOutput.new).ls
+    services.find { |service| service.name == add_on.name }.app_version
+  end
   
   protected
 
