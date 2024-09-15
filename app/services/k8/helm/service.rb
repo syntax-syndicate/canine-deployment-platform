@@ -3,6 +3,6 @@ class K8::Helm::Service
 
   def initialize(add_on)
     @add_on = add_on
-    @client = K8::Client.new(add_on.cluster.kubeconfig).client
+    @client = K8::Client.new(add_on.cluster.kubeconfig)
   end
 end

@@ -14,9 +14,10 @@ class K8::Helm::Client
     end
   end
 
-  def install(name, chart_url, namespace: 'default')
+  def install(name, chart_url, values: {}, namespace: 'default')
     with_kube_config do |kubeconfig_file|
-      command = "helm install #{name} #{chart_url} --namespace #{namespace}"
+      values_string = values.map { |key, value| "#{key}=#{value}" }.join(',')
+      command = "helm install #{name} #{chart_url} --namespace #{namespace} --set #{values_string}"
       exit_status = runner.(command, envs: { "KUBECONFIG" => kubeconfig_file.path })
       return exit_status
     end

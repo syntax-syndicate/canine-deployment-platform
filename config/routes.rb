@@ -3,7 +3,11 @@ Rails.application.routes.draw do
   namespace :inbound_webhooks do
     resources :github, controller: :github, only: [:create]
   end
-  resources :add_ons
+  resources :add_ons do
+    member do
+      get :logs, to: "add_ons#logs"
+    end
+  end
   resources :projects do
     resources :metrics, only: [:index], module: :projects
     resources :project_add_ons, only: [:create, :destroy], module: :projects

@@ -1,5 +1,6 @@
 class AddOnsController < ApplicationController
-  before_action :set_add_on, only: [:show, :edit, :update, :destroy]
+  include StorageHelper
+  before_action :set_add_on, only: [:show, :edit, :update, :destroy, :logs]
 
   # GET /add_ons
   def index
@@ -11,11 +12,6 @@ class AddOnsController < ApplicationController
 
   # GET /add_ons/1 or /add_ons/1.json
   def show
-    if @add_on.chart_type == "redis"
-      @service = K8::Helm::Redis.new(@add_on)
-    elsif @add_on.chart_type == "postgresql"
-      @service = K8::Helm::Postgresql.new(@add_on)
-    end
   end
 
   # GET /add_ons/new
@@ -26,19 +22,22 @@ class AddOnsController < ApplicationController
     # authorize @add_on
   end
 
+  def logs
+  end
+
   # GET /add_ons/1/edit
   def edit
   end
 
   # POST /add_ons or /add_ons.json
   def create
-    @add_on = AddOn.create(add_on_params)
+    @add_on = AddOn.new(add_on_params)
     # Uncomment to authorize with Pundit
     # authorize @add_on
 
     respond_to do |format|
       if @add_on.save
-        AddOns::InstallJob.perform_later(@add_on)
+        #AddOns::InstallJob.perform_later(@add_on)
         format.html { redirect_to @add_on, notice: "Add on was successfully created." }
         format.json { render :show, status: :created, location: @add_on }
       else
@@ -79,13 +78,19 @@ class AddOnsController < ApplicationController
 
     # Uncomment to authorize with Pundit
     # authorize @add_on
+    if @add_on.chart_type == "redis"
+      @service = K8::Helm::Redis.new(@add_on)
+    elsif @add_on.chart_type == "postgresql"
+      @service = K8::Helm::Postgresql.new(@add_on)
+    end
   rescue ActiveRecord::RecordNotFound
     redirect_to add_ons_path
   end
 
   # Only allow a list of trusted parameters through.
   def add_on_params
-    params.require(:add_on).permit(:cluster_id, :chart_type, :name, :metadata)
+    params[:add_on][:metadata] = params[:add_on][:metadata][params[:add_on][:chart_type]]
+    params.require(:add_on).permit(:cluster_id, :chart_type, :name, metadata: {})
 
     # Uncomment to use Pundit permitted attributes
     # params.require(:add_on).permit(policy(@add_on).permitted_attributes)

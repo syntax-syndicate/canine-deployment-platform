@@ -1,13 +1,1 @@
-<div id="<%= dom_id add_on %>">
-  <% if add_on.installing? %>
-    <div class="flex flex-col items-center justify-center">
-      <%= render "add_ons/installing" %>
-      <div class="mt-4 text-lg">
-        Your add-on is installing... Go grab a coffee, this could take a while.
-      </div>
-    </div>
-  <% end %>
-  <div class="mt-4">
-    <%= render "log_outputs/logs", loggable: add_on %>
-  </div>
-</div>
+  <%= render "add_ons/#{add_on.chart_type}", service: @service %>

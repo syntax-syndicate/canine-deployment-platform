@@ -27,15 +27,15 @@ helm:
           type: integer
           default: 0
           hidden: true
-    - name: elasticsearch
-      logo: /images/helm/elasticsearch.png
-      version: 18.10.0
-      repository: https://charts.bitnami.com/bitnami
-      template:
-        - name: resources.limits.storage
-          key: resources.limits.storage
-          type: size
-          default: 10Gi
+    #- name: elasticsearch
+    #  logo: /images/helm/elasticsearch.png
+    #  version: 18.10.0
+    #  repository: https://charts.bitnami.com/bitnami
+    #  template:
+    #    - name: resources.limits.storage
+    #      key: resources.limits.storage
+    #      type: size
+    #      default: 10Gi
     #- name: sentry
     #  logo: /images/helm/sentry.png
     #  version: 2.10.0

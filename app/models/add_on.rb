@@ -11,6 +11,7 @@ class AddOn < ApplicationRecord
   validates :chart_type, presence: true
   validate :chart_type_exists
   validates :name, presence: true, format: { with: /\A[a-z0-9_-]+\z/, message: "must be lowercase, numbers, hyphens, and underscores only" }
+  validates_uniqueness_of :name, scope: :cluster_id
 
   def helm_chart_url
     chart_definition['repository']
