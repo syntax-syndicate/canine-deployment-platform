@@ -1,3 +1,6 @@
+TODO:
+* Building a cron job scheduler
+
 # 🎉 Jumpstart Pro Rails
 
 Welcome! To get started, clone the repository and push it to a new repository.

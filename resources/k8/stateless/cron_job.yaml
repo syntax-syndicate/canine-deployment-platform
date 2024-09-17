@@ -16,3 +16,5 @@ spec:
               - <%= c %>
             <% end %>
           restartPolicy: OnFailure
+          imagePullSecrets:
+          - name: dockerconfigjson-github-com

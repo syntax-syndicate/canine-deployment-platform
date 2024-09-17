@@ -11,19 +11,24 @@ class Projects::DeploymentJob < ApplicationJob
     kubectl = K8::Kubectl.new(cluster_kubeconfig, runner)
     upload_registry_secrets(kubectl, deployment)
     
-    deployment_yaml = K8::Stateless::Deployment.new(project).to_yaml
-    kubectl.apply_yaml(deployment_yaml)
-    kubectl.("rollout restart deployment/#{project.name}-deployment")
+    if project.cron_job?
+      cron_job_yaml = K8::Stateless::CronJob.new(project).to_yaml
+      kubectl.apply_yaml(cron_job_yaml)
+    else
+      deployment_yaml = K8::Stateless::Deployment.new(project).to_yaml
+      kubectl.apply_yaml(deployment_yaml)
+      kubectl.("rollout restart deployment/#{project.name}-deployment")
 
-    unless project.background_service?
-      service_yaml = K8::Stateless::Service.new(project).to_yaml
-      kubectl.apply_yaml(service_yaml)
-    end
+      if project.web_service? || project.internal_service?
+        service_yaml = K8::Stateless::Service.new(project).to_yaml
+        kubectl.apply_yaml(service_yaml)
+      end
 
-    if project.web_service?
-      # TODO: Set up ingress
-      ingress_yaml = K8::Stateless::Ingress.new(project).to_yaml
-      kubectl.apply_yaml(ingress_yaml)
+      if project.web_service?
+        # TODO: Set up ingress
+        ingress_yaml = K8::Stateless::Ingress.new(project).to_yaml
+        kubectl.apply_yaml(ingress_yaml)
+      end
     end
 
     deployment.completed!
