@@ -99,12 +99,12 @@ class ClustersController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def cluster_params
-    kubeconfig_json = params[:cluster][:kubeconfig]
-    params[:cluster][:kubeconfig] = JSON.parse(kubeconfig_json) if kubeconfig_json.present?
+    if params[:cluster][:kubeconfig].present?
+      kubeconfig_file = params[:cluster][:kubeconfig]
+      yaml_content = kubeconfig_file.read
+      params[:cluster][:kubeconfig] = YAML.safe_load(yaml_content).to_json
+    end
 
     params.require(:cluster).permit(:name, :kubeconfig)
-
-    # Uncomment to use Pundit permitted attributes
-    # params.require(:cluster).permit(policy(@cluster).permitted_attributes)
   end
 end

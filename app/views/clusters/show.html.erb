@@ -12,12 +12,30 @@
       <%= turbo_frame_tag "test_connection_frame" do %>
         <%= button_to "Test Connection", test_connection_cluster_path(@cluster), class: "btn btn-ghost m-1" %>
       <% end %>
-      <%= link_to t("edit"), edit_cluster_path(@cluster), class: "btn btn-secondary m-1" %>
     </div>
   </div>
 
   <div class="p-8 bg-white dark:bg-gray-900 dark:border dark:border-gray-700 rounded shadow">
-    <%= render @cluster %>
+    <div id="<%= dom_id @cluster %>">
+      <div class="mb-4">
+        <p class="text-sm font-medium text-gray-500">Name</p>
+        <%= @cluster.name %>
+        <%= render "log_outputs/logs", loggable: @cluster %>
+      </div>
+      <h4>Projects:</h4>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <% @cluster.projects.each do |project| %>
+          <%= render project %>
+        <% end %>
+      </div>
+      <h4>Add Ons:</h4>
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+        <% @cluster.add_ons.each do |add_on| %>
+          <%= render add_on %>
+        <% end %>
+      </div>
+    </div>
+
   </div>
   <%= link_to "Metrics", cluster_metrics_path(@cluster) %>
   <%= link_to "Download Kubeconfig File", download_kubeconfig_cluster_path(@cluster) %>
