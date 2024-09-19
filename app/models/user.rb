@@ -76,6 +76,6 @@ class User < ApplicationRecord
   end
 
   def github_account
-    @_github_account ||= User.first.connected_accounts.find_by(provider: "github")
+    @_github_account ||= connected_accounts.find_by(provider: "github")
   end
 end
