@@ -1,0 +1,30 @@
+<%= project_layout(@project) do %>
+  <div class="flex items-center justify-between mb-4">
+    Services
+  </div>
+
+  <div class="overflow-x-auto">
+    <%= form_with(@service) do |form| %>
+      <%= form.label :name %>
+      <%= form.text_field :name, class: "input input-bordered", required: true %>
+
+      <div data-controller="partial-select">
+        <%= form.label :service_type %>
+        <%= form.select(
+          :service_type,
+          Service.service_types.keys.map { |type| [type.titleize, type] },
+          {},
+          class: "select select-bordered",
+          data: {
+            "partial-select-target": "select",
+            "select-attribute-value": "data-project-type",
+            "action": "change->partial-select#toggle",
+          }
+        ) %>
+      </div>
+
+      <%= form.label :command %>
+      <%= form.text_field :command, class: "input input-bordered", required: false %>
+    <% end %>
+  </div>
+<% end %>

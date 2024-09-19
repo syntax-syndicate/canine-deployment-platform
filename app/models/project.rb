@@ -30,6 +30,7 @@ class Project < ApplicationRecord
   broadcasts_refreshes
   belongs_to :cluster
   has_one :user, through: :cluster
+  has_many :services, dependent: :destroy
   has_many :environment_variables, dependent: :destroy
   has_many :domains, dependent: :destroy
   has_many :builds, dependent: :destroy
@@ -45,10 +46,6 @@ class Project < ApplicationRecord
   }
 
   enum project_type: {
-    web_service: 0,
-    internal_service: 1,
-    background_service: 2,
-    cron_job: 3,
   }
 
   def current_deployment
