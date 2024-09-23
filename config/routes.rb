@@ -3,8 +3,13 @@ Rails.application.routes.draw do
   namespace :inbound_webhooks do
     resources :github, controller: :github, only: [:create]
   end
-  resources :add_ons
+  resources :add_ons do
+    member do
+      get :logs, to: "add_ons#logs"
+    end
+  end
   resources :projects do
+    resources :services, only: [:index, :new, :create, :destroy], module: :projects
     resources :metrics, only: [:index], module: :projects
     resources :project_add_ons, only: [:create, :destroy], module: :projects
     resources :environment_variables, only: [:index, :create], module: :projects
@@ -19,6 +24,9 @@ Rails.application.routes.draw do
     end
   end
   resources :clusters do
+    member do
+      get :download_kubeconfig
+    end
     resource :metrics, only: [:show], module: :clusters
     member do
       post :test_connection

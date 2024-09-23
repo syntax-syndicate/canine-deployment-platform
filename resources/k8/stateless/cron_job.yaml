@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: <%= service.name %>
+spec:
+  schedule: <%= service.cron_schedule.schedule %>
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: <%= service.project.name %>
+            image: <%= service.project.container_registry_url %>
+            imagePullPolicy: Always
+            command: <% service.command.split(' ').each do |c| %>
+              - <%= c %>
+            <% end %>
+          restartPolicy: OnFailure
+          imagePullSecrets:
+          - name: dockerconfigjson-github-com

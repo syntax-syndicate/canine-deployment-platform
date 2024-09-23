@@ -10,38 +10,16 @@
     </button>
   </div>
 
-  <div class="overflow-x-auto">
-    <table class="w-full table-auto">
-      <thead class="">
-        <tr>
-          <th class="px-4 py-2 text-left text-gray-600">Pod Name</th>
-          <th class="px-4 py-2 text-left text-gray-600">CPU</th>
-          <th class="px-4 py-2 text-left text-gray-600">Memory</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @pod_metrics.each do |metric| %>
-          <tr class="border-b">
-            <td class="px-4 py-2"><%= metric[:name] %></td>
-            <td class="px-4 py-2"><%= metric[:cpu] %></td>
-            <td class="px-4 py-2"><%= metric[:memory] %></td>
-          </tr>
-        <% end %>
-      </tbody>
-
-    </table>
-  </div>
-
   <h2 class="text-xl font-semibold mb-4">Node Metrics</h2>
   <div class="overflow-x-auto">
     <table class="w-full table-auto">
       <thead>
         <tr>
-          <th class="px-4 py-2 text-left text-gray-600">Node Name</th>
-          <th class="px-4 py-2 text-left text-gray-600">CPU Cores</th>
-          <th class="px-4 py-2 text-left text-gray-600">CPU %</th>
-          <th class="px-4 py-2 text-left text-gray-600">Memory Bytes</th>
-          <th class="px-4 py-2 text-left text-gray-600">Memory %</th>
+          <th class="px-4 py-2 text-left">Node Name</th>
+          <th class="px-4 py-2 text-left">CPU Cores</th>
+          <th class="px-4 py-2 text-left">CPU %</th>
+          <th class="px-4 py-2 text-left">Memory Bytes</th>
+          <th class="px-4 py-2 text-left">Memory %</th>
         </tr>
       </thead>
       <tbody>
@@ -57,5 +35,28 @@
       </tbody>
     </table>
   </div>
+
+  <div class="overflow-x-auto mt-4">
+    <table class="w-full table-auto">
+      <thead class="">
+        <tr>
+          <th class="px-4 py-2 text-left">Pod Name</th>
+          <th class="px-4 py-2 text-left">CPU</th>
+          <th class="px-4 py-2 text-left">Memory</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @pod_metrics.each do |metric| %>
+          <tr class="border-b">
+            <td class="px-4 py-2"><%= metric[:name] %></td>
+            <td class="px-4 py-2"><%= metric[:cpu] %></td>
+            <td class="px-4 py-2"><%= metric[:memory] %></td>
+          </tr>
+        <% end %>
+      </tbody>
+
+    </table>
+  </div>
+
 
 </div>

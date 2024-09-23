@@ -7,6 +7,3 @@
     <%= form.submit "Add Domain", class: "btn btn-primary" %>
   <% end %>
 <% end %>
-<%= turbo_stream.append_javascript do %>
-  document.querySelector('#<%= dom_id(@project) %>_domain_form form').reset();
-<% end %>

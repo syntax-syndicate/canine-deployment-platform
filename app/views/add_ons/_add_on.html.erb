@@ -1,22 +1,14 @@
-<div id="<%= dom_id add_on %>">
-  <div class="mb-4">
-    <p class="text-sm font-medium text-gray-500">Cluster</p>
-    <%= add_on.cluster_id %>
+<!-- How to represent an add_on on other surfaces -->
+<%= link_to add_on_path(add_on) do %>
+  <div class="card">
+    <div class="card-body">
+      <h2 class="card-title">
+        <%= add_on.name %>
+      </h2>
+      <p class="card-text">
+        <%= render "add_ons/status", add_on: add_on %>
+        <%= add_on.chart_type.titleize %>
+      </p>
+    </div>
   </div>
-  <div class="mb-4">
-    <p class="text-sm font-medium text-gray-500">Helm Chart URL</p>
-    <%= add_on.helm_chart_url %>
-  </div>
-  <div class="mb-4">
-    <p class="text-sm font-medium text-gray-500">Name</p>
-    <%= add_on.name %>
-  </div>
-  <div class="mb-4">
-    <p class="text-sm font-medium text-gray-500">Metadata</p>
-    <%= add_on.metadata %>
-  </div>
-  <%= render "log_outputs/logs", loggable: add_on %>
-  <% if action_name != "show" %>
-    <%= link_to "View this add on", add_on, class: "btn btn-secondary" %>
-  <% end %>
-</div>
+<% end %>

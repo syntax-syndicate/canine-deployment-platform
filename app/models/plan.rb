@@ -1,3 +1,29 @@
+# == Schema Information
+#
+# Table name: plans
+#
+#  id                :bigint           not null, primary key
+#  amount            :integer          default(0), not null
+#  charge_per_unit   :boolean
+#  contact_url       :string
+#  currency          :string
+#  description       :string
+#  details           :jsonb
+#  hidden            :boolean
+#  interval          :string           not null
+#  interval_count    :integer          default(1)
+#  name              :string           not null
+#  trial_period_days :integer          default(0)
+#  unit_label        :string
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  braintree_id      :string
+#  fake_processor_id :string
+#  lemon_squeezy_id  :string
+#  paddle_billing_id :string
+#  paddle_classic_id :string
+#  stripe_id         :string
+#
 class Plan < ApplicationRecord
   has_prefix_id :plan
 

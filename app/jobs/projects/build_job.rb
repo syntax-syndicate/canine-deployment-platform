@@ -86,13 +86,13 @@ class Projects::BuildJob < ApplicationJob
         "--password", project.user.github_access_token,
       ]
 
-      Rails.logger.info "Logging into Docker Hub as #{project.user.github_username}"
+      build.info "Logging into Docker Hub as #{project.user.github_username}"
       stdout, stderr, status = Open3.capture3(*docker_login_command)
 
       if status.success?
-        Rails.logger.info "Logged in to Docker Hub successfully."
+        build.info "Logged in to Docker Hub successfully."
       else
-        Rails.logger.error "Docker Hub login failed with error:\n#{stderr}"
+        build.error "Docker Hub login failed with error:\n#{stderr}"
         return
       end
 

@@ -1,6 +1,6 @@
 class K8::Metrics::Nodes
   def self.call(cluster)
-    K8::Kubectl.new(cluster.kubeconfig).with_kube_config do |kubeconfig_file|
+    K8::Kubectl.new(cluster.kubeconfig, nil).with_kube_config do |kubeconfig_file|
       command = "kubectl top nodes --kubeconfig #{kubeconfig_file.path}"
       output = `#{command}`
       parse_output(output)

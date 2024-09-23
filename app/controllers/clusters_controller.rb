@@ -1,5 +1,5 @@
 class ClustersController < ApplicationController
-  before_action :set_cluster, only: [:show, :edit, :update, :destroy, :test_connection]
+  before_action :set_cluster, only: [:show, :edit, :update, :destroy, :test_connection, :download_kubeconfig]
 
   # GET /clusters
   def index
@@ -37,6 +37,10 @@ class ClustersController < ApplicationController
     else
       render turbo_stream: turbo_stream.replace("test_connection_frame", partial: "clusters/connection_failed")
     end
+  end
+
+  def download_kubeconfig
+    send_data @cluster.kubeconfig, filename: "#{@cluster.name}-kubeconfig.yml", type: "application/yaml"
   end
 
   # POST /clusters or /clusters.json
@@ -95,12 +99,12 @@ class ClustersController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def cluster_params
-    kubeconfig_json = params[:cluster][:kubeconfig]
-    params[:cluster][:kubeconfig] = JSON.parse(kubeconfig_json) if kubeconfig_json.present?
+    if params[:cluster][:kubeconfig].present?
+      kubeconfig_file = params[:cluster][:kubeconfig]
+      yaml_content = kubeconfig_file.read
+      params[:cluster][:kubeconfig] = YAML.safe_load(yaml_content).to_json
+    end
 
     params.require(:cluster).permit(:name, :kubeconfig)
-
-    # Uncomment to use Pundit permitted attributes
-    # params.require(:cluster).permit(policy(@cluster).permitted_attributes)
   end
 end
