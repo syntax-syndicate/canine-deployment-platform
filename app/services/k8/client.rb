@@ -1,6 +1,7 @@
 module K8
   class Client
     attr_reader :client
+
     delegate :get_persistent_volume_claims, :get_services, :get_pods, to: :client
 
     def self.from_project(project)
@@ -8,18 +9,16 @@ module K8
     end
 
     def initialize(kubeconfig)
-      @kubeconfig = kubeconfig
+      @kubeconfig = kubeconfig.is_a?(String) ? JSON.parse(kubeconfig) : kubeconfig
       @client = build_client
     end
 
     def can_connect?
-      begin
-        @client.discover
-        true
-      rescue StandardError => e
-        puts "Connection failed: #{e.message}"
-        false
-      end
+      @client.discover
+      true
+    rescue StandardError => e
+      puts "Connection failed: #{e.message}"
+      false
     end
 
     def pods_for_service(service_name)
@@ -52,18 +51,18 @@ module K8
       )
     end
 
-    def ssl_options(cluster_info)
-      ssl_options = { verify_ssl: OpenSSL::SSL::VERIFY_NONE }
-      #if cluster_info['certificate-authority-data']
+    def ssl_options(_cluster_info)
+      { verify_ssl: OpenSSL::SSL::VERIFY_NONE }
+      # if cluster_info['certificate-authority-data']
       #  ssl_options[:ca_file] = write_temp_file(Base64.decode64(cluster_info['certificate-authority-data']))
-      #end
-      ssl_options
+      # end
     end
 
     def auth_options(user_info)
       auth_options = {}
       if user_info['client-certificate-data'] && user_info['client-key-data']
-        auth_options[:client_cert] = OpenSSL::X509::Certificate.new(Base64.decode64(user_info['client-certificate-data']))
+        auth_options[:client_cert] =
+          OpenSSL::X509::Certificate.new(Base64.decode64(user_info['client-certificate-data']))
         auth_options[:client_key] = OpenSSL::PKey::RSA.new(Base64.decode64(user_info['client-key-data']))
       elsif user_info['token']
         auth_options[:bearer_token] = user_info['token']
@@ -79,4 +78,3 @@ module K8
     end
   end
 end
-
