@@ -25,10 +25,10 @@ GIT
 
 GIT
   remote: https://github.com/excid3/jbuilder.git
-  revision: 394014adca00e39e5c773a694b4b3d5d224f7e71
+  revision: 52791b57350b200b2fcf25b674aca91384d56e1d
   branch: partial-paths
   specs:
-    jbuilder (2.11.5)
+    jbuilder (2.12.0)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
 
@@ -133,13 +133,13 @@ GEM
       erubi (~> 1.4)
       parser (>= 2.4)
       smart_properties
-    bigdecimal (3.1.7)
+    bigdecimal (3.1.8)
     bindex (0.8.1)
     bootsnap (1.18.3)
       msgpack (~> 1.2)
     brakeman (6.1.2)
       racc
-    builder (3.2.4)
+    builder (3.3.0)
     capybara (3.40.0)
       addressable
       matrix
@@ -202,7 +202,7 @@ GEM
       rainbow
       rubocop
       smart_properties
-    erubi (1.12.0)
+    erubi (1.13.0)
     et-orbi (1.2.11)
       tzinfo
     excon (0.111.0)
@@ -233,7 +233,7 @@ GEM
     http-cookie (1.0.7)
       domain_name (~> 0.5)
     http-form_data (2.3.0)
-    i18n (1.14.4)
+    i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     image_processing (1.12.2)
@@ -325,7 +325,7 @@ GEM
     mime-types-data (3.2024.0820)
     mini_magick (4.12.0)
     mini_mime (1.1.5)
-    minitest (5.21.2)
+    minitest (5.25.1)
     mission_control-jobs (0.3.1)
       importmap-rails
       irb (~> 1.13)
