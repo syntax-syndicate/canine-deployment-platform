@@ -10,7 +10,6 @@
 #  dockerfile_path                :string           default("./Dockerfile"), not null
 #  name                           :string           not null
 #  predeploy_command              :string
-#  project_type                   :integer          not null
 #  repository_url                 :string           not null
 #  status                         :integer          default("creating"), not null
 #  created_at                     :datetime         not null
@@ -34,7 +33,9 @@ class Project < ApplicationRecord
   has_many :environment_variables, dependent: :destroy
   has_many :builds, dependent: :destroy
   has_many :deployments, through: :builds
-  validates :name, presence: true, format: { with: /\A[a-z0-9_-]+\z/, message: "must be lowercase, numbers, hyphens, and underscores only" }
+  has_many :domains, through: :services
+  validates :name, presence: true,
+                   format: { with: /\A[a-z0-9_-]+\z/, message: 'must be lowercase, numbers, hyphens, and underscores only' }
 
   enum status: {
     creating: 0,

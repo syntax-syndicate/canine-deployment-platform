@@ -1,6 +1,6 @@
 class ProjectsController < ApplicationController
   include ProjectsHelper
-  before_action :set_project, only: [:show, :edit, :update, :destroy]
+  before_action :set_project, only: %i[show edit update destroy]
 
   # GET /projects
   def index
@@ -11,8 +11,7 @@ class ProjectsController < ApplicationController
   end
 
   # GET /projects/1 or /projects/1.json
-  def show
-  end
+  def show; end
 
   # GET /projects/new
   def new
@@ -23,8 +22,7 @@ class ProjectsController < ApplicationController
   end
 
   # GET /projects/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /projects or /projects.json
   def create
@@ -33,7 +31,7 @@ class ProjectsController < ApplicationController
     @project = result.project
     respond_to do |format|
       if result.success?
-        format.html { redirect_to @project, notice: "Project was successfully created." }
+        format.html { redirect_to @project, notice: 'Project was successfully created.' }
         format.json { render :show, status: :created, location: @project }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -46,7 +44,7 @@ class ProjectsController < ApplicationController
   def update
     respond_to do |format|
       if @project.update(project_params)
-        format.html { redirect_to @project, notice: "Project was successfully updated." }
+        format.html { redirect_to @project, notice: 'Project was successfully updated.' }
         format.json { render :show, status: :ok, location: @project }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -59,7 +57,7 @@ class ProjectsController < ApplicationController
   def destroy
     @project.destroy!
     respond_to do |format|
-      format.html { redirect_to projects_url, status: :see_other, notice: "Project was successfully destroyed." }
+      format.html { redirect_to projects_url, status: :see_other, notice: 'Project was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -86,8 +84,7 @@ class ProjectsController < ApplicationController
       :container_registry,
       :docker_build_context_directory,
       :docker_command,
-      :dockerfile_path,
-      :project_type,
+      :dockerfile_path
     )
   end
 end

@@ -17,7 +17,8 @@
 #  fk_rails_...  (service_id => services.id)
 #
 class Domain < ApplicationRecord
-  belongs_to :project
+  belongs_to :service
+  has_one :project, through: :service
   has_one :cluster, through: :project
   validates :domain_name, presence: true, uniqueness: { scope: :project_id }
   validate :domain_name_has_tld
@@ -27,7 +28,7 @@ class Domain < ApplicationRecord
   private
 
   def domain_name_has_tld
-    errors.add(:domain_name, "is not valid") unless domain_name.split(".").length > 1
+    errors.add(:domain_name, 'is not valid') unless domain_name.split('.').length > 1
   end
 
   def downcase_domain_name
@@ -35,6 +36,6 @@ class Domain < ApplicationRecord
   end
 
   def strip_protocol
-    self.domain_name = domain_name.gsub(/^https?:\/\//, "")
+    self.domain_name = domain_name.gsub(%r{^https?://}, '')
   end
 end
