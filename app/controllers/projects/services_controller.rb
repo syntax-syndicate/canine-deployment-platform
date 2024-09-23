@@ -1,6 +1,6 @@
 class Projects::ServicesController < Projects::BaseController
   before_action :set_project
-  before_action :set_service, only: [:update, :destroy]
+  before_action :set_service, only: %i[update destroy]
 
   def index
     @services = @project.services
@@ -36,11 +36,12 @@ class Projects::ServicesController < Projects::BaseController
   end
 
   private
+
   def set_service
     @service = @project.services.find(params[:id])
   end
 
   def service_params
-    params.require(:service).permit(:service_type, :command)
+    params.require(:service).permit(:service_type, :command, :name)
   end
 end

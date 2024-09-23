@@ -21,6 +21,7 @@
 
       <%= form.label :command %>
       <%= form.text_field :command, class: "input input-bordered", required: false %>
+      <%= form.button button_text(form.send(:submit_default_value)), class: "btn btn-primary" %>
     <% end %>
     <div class="text-sm mb-4">
       <p>
