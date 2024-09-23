@@ -12,7 +12,7 @@
 #  predeploy_command              :string
 #  project_type                   :integer          not null
 #  repository_url                 :string           not null
-#  status                         :integer          default("created"), not null
+#  status                         :integer          default("creating"), not null
 #  created_at                     :datetime         not null
 #  updated_at                     :datetime         not null
 #  cluster_id                     :bigint           not null
@@ -30,25 +30,15 @@ class Project < ApplicationRecord
   broadcasts_refreshes
   belongs_to :cluster
   has_one :user, through: :cluster
+  has_many :services, dependent: :destroy
   has_many :environment_variables, dependent: :destroy
-  has_many :domains, dependent: :destroy
   has_many :builds, dependent: :destroy
   has_many :deployments, through: :builds
   validates :name, presence: true, format: { with: /\A[a-z0-9_-]+\z/, message: "must be lowercase, numbers, hyphens, and underscores only" }
-  has_one :cron_schedule
-  validates :cron_schedule, presence: true, if: :cron_job?
-  validates :command, presence: true, if: :cron_job?
 
   enum status: {
-    created: 0,
+    creating: 0,
     deployed: 1
-  }
-
-  enum project_type: {
-    web_service: 0,
-    internal_service: 1,
-    background_service: 2,
-    cron_job: 3,
   }
 
   def current_deployment
