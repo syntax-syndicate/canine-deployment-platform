@@ -10,7 +10,6 @@
 #  dockerfile_path                :string           default("./Dockerfile"), not null
 #  name                           :string           not null
 #  predeploy_command              :string
-#  project_type                   :integer          not null
 #  repository_url                 :string           not null
 #  status                         :integer          default("creating"), not null
 #  created_at                     :datetime         not null

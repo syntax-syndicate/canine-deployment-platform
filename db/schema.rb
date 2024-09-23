@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_20_231224) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_23_210425) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -415,7 +415,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_20_231224) do
     t.string "docker_command"
     t.string "predeploy_command"
     t.integer "status", default: 0, null: false
-    t.integer "project_type", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["cluster_id"], name: "index_projects_on_cluster_id"
