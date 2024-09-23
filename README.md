@@ -40,7 +40,13 @@ bin/setup
 
 ### Setup Github Omniauth for local development
 
-[Create an Omniauth Github app](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app)
+1. [Create cloudflare tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/get-started/create-local-tunnel/) using either github pages or your own website
+
+```bash
+cloudflared tunnel create canine
+```
+
+2. [Create an Omniauth Github app](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app)
 
 Make sure the authorization callback is with this path: `/users/auth/github/callback`
 
@@ -52,6 +58,14 @@ OMNIAUTH_GITHUB_WEBHOOK_SECRET=1234567890
 OMNIAUTH_GITHUB_PUBLIC_KEY=1234567890
 OMNIAUTH_GITHUB_PRIVATE_KEY=1234567890
 ```
+
+Your localhost:3000 should connect to the cloudflare tunnel by running:
+
+```bash
+cloudflared tunnel run canine
+```
+
+You can now login via Github
 
 ## Running Jumpstart Pro Rails
 
