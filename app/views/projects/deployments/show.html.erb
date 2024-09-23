@@ -9,8 +9,10 @@
     <%= render "log_outputs/logs", loggable: @build %>
   </div>
 
-  <h2 class="text-xl font-bold mb-4">Release Logs</h2>
-  <div class="my-4">
-    <%= render "log_outputs/logs", loggable: @build.deployment %>
-  </div>
+  <% if @build.deployment %>
+    <h2 class="text-xl font-bold mb-4">Release Logs</h2>
+    <div class="my-4">
+      <%= render "log_outputs/logs", loggable: @build.deployment %>
+    </div>
+  <% end %>
 <% end %>
