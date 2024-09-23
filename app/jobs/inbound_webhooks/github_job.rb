@@ -19,10 +19,8 @@ module InboundWebhooks
 
     def process_webhook(body)
       return if body['pusher'].nil?
-      user = User.find_by(email: body['pusher']['email'])
-      return if user.nil?
       branch = body['ref'].gsub('refs/heads/', '')
-      projects = user.projects.where(repository_url: body['repository']['full_name'], branch: branch, autodeploy: true)
+      projects = Project.where(repository_url: body['repository']['full_name'], branch: branch, autodeploy: true)
       projects.each do |project|
         # Trigger a docker build & docker deploy
         build = Build.create!(
