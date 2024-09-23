@@ -82,7 +82,7 @@ module Jumpstart
     #     public_key: y
     def self.credentials_for(provider)
       credentials = Jumpstart.credentials.dig(Rails.env, :omniauth, provider) ||
-                    Jumpstart.credentials.dig(:omniauth, provider)
+                    Jumpstart.credentials.dig(:omniauth, provider) || {}
       credentials.merge({
         private_key: ENV["OMNIAUTH_#{provider.upcase}_PRIVATE_KEY"],
         public_key: ENV["OMNIAUTH_#{provider.upcase}_PUBLIC_KEY"]
