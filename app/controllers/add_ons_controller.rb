@@ -1,6 +1,6 @@
 class AddOnsController < ApplicationController
   include StorageHelper
-  before_action :set_add_on, only: [:show, :edit, :update, :destroy, :logs]
+  before_action :set_add_on, only: %i[show edit update destroy logs]
 
   # GET /add_ons
   def index
@@ -11,8 +11,7 @@ class AddOnsController < ApplicationController
   end
 
   # GET /add_ons/1 or /add_ons/1.json
-  def show
-  end
+  def show; end
 
   # GET /add_ons/new
   def new
@@ -22,12 +21,10 @@ class AddOnsController < ApplicationController
     # authorize @add_on
   end
 
-  def logs
-  end
+  def logs; end
 
   # GET /add_ons/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /add_ons or /add_ons.json
   def create
@@ -37,8 +34,8 @@ class AddOnsController < ApplicationController
 
     respond_to do |format|
       if @add_on.save
-        #AddOns::InstallJob.perform_later(@add_on)
-        format.html { redirect_to @add_on, notice: "Add on was successfully created." }
+        # AddOns::InstallJob.perform_later(@add_on)
+        format.html { redirect_to @add_on, notice: 'Add on was successfully created.' }
         format.json { render :show, status: :created, location: @add_on }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -51,7 +48,7 @@ class AddOnsController < ApplicationController
   def update
     respond_to do |format|
       if @add_on.update(add_on_params)
-        format.html { redirect_to @add_on, notice: "Add on was successfully updated." }
+        format.html { redirect_to @add_on, notice: 'Add on was successfully updated.' }
         format.json { render :show, status: :ok, location: @add_on }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -78,9 +75,9 @@ class AddOnsController < ApplicationController
 
     # Uncomment to authorize with Pundit
     # authorize @add_on
-    if @add_on.chart_type == "redis"
+    if @add_on.chart_type == 'redis'
       @service = K8::Helm::Redis.new(@add_on)
-    elsif @add_on.chart_type == "postgresql"
+    elsif @add_on.chart_type == 'postgresql'
       @service = K8::Helm::Postgresql.new(@add_on)
     end
   rescue ActiveRecord::RecordNotFound

@@ -18,7 +18,7 @@ class K8::Helm::Client
     with_kube_config do |kubeconfig_file|
       values_string = values.map { |key, value| "#{key}=#{value}" }.join(',')
       command = "helm install #{name} #{chart_url} --namespace #{namespace} --set #{values_string}"
-      exit_status = runner.(command, envs: { "KUBECONFIG" => kubeconfig_file.path })
+      exit_status = runner.call(command, envs: { 'KUBECONFIG' => kubeconfig_file.path })
       return exit_status
     end
   end
@@ -26,7 +26,7 @@ class K8::Helm::Client
   def uninstall(name, namespace: 'default')
     with_kube_config do |kubeconfig_file|
       command = "helm delete #{name} --namespace #{namespace}"
-      exit_status = runner.(command, envs: { "KUBECONFIG" => kubeconfig_file.path })
+      exit_status = runner.call(command, envs: { 'KUBECONFIG' => kubeconfig_file.path })
       return exit_status
     end
   end
@@ -36,7 +36,7 @@ class K8::Helm::Client
   def parse_helm_ls_output(output)
     lines = output.split("\n")
     headers = lines.shift.split(/\s+/)
-    
+
     lines.map do |line|
       values = line.split(/\s+/)
       HelmRelease.new(

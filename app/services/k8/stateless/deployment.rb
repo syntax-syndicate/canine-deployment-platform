@@ -1,11 +1,15 @@
+# frozen_string_literal: true
+
 class K8::Stateless::Deployment < K8::Base
-  attr_accessor :service, :project, :name, :port, :environment_variables
+  attr_accessor :name, :port, :environment_variables, :container_registry_url, :service_command
 
   def initialize(service)
-    @service = service
-    @project = service.project
-    @name = @project.name
+    super
+    project = service.project
+    @name = project.name
     @port = 3000
-    @environment_variables = @project.environment_variables
+    @environment_variables = project.environment_variables
+    @container_registry_url = project.container_registry_url
+    @service_command = service.command
   end
 end
