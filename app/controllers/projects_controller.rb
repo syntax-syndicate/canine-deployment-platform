@@ -81,7 +81,6 @@ class ProjectsController < ApplicationController
       :repository_url,
       :branch,
       :cluster_id,
-      :container_registry,
       :docker_build_context_directory,
       :docker_command,
       :dockerfile_path
