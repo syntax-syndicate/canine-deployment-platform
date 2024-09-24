@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'English'
 class Projects::BuildJob < ApplicationJob
   queue_as :default
   class BuildFailure < StandardError; end
