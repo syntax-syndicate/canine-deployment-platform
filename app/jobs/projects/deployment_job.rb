@@ -2,11 +2,10 @@ require 'base64'
 require 'json'
 
 class Projects::DeploymentJob < ApplicationJob
-
   def perform(deployment)
     cluster_kubeconfig = deployment.project.cluster.kubeconfig
     project = deployment.project
-    
+
     # Upload container registry secrets
     runner = Cli::RunAndLog.new(deployment)
     kubectl = K8::Kubectl.new(cluster_kubeconfig, runner)
@@ -64,9 +63,9 @@ class Projects::DeploymentJob < ApplicationJob
 
     # Create the JSON structure
     docker_config = {
-      "auths" => {
-        "ghcr.io" => {
-          "auth" => auth_value
+      'auths' => {
+        'ghcr.io' => {
+          'auth' => auth_value
         }
       }
     }
