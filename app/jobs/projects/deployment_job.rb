@@ -3,26 +3,15 @@ require 'json'
 
 class Projects::DeploymentJob < ApplicationJob
   def perform(deployment)
-    cluster_kubeconfig = deployment.project.cluster.kubeconfig
     project = deployment.project
+    kubeconfig = project.cluster.kubeconfig
+    kubectl = create_kubectl(deployment, kubeconfig)
 
     # Upload container registry secrets
-    runner = Cli::RunAndLog.new(deployment)
-    kubectl = K8::Kubectl.new(cluster_kubeconfig, runner)
     upload_registry_secrets(kubectl, deployment)
 
     # For each of the projects services
-    project.services.each do |service|
-      if service.background_service?
-        apply_deployment(service, kubectl)
-      elsif service.cron_job?
-        apply_cron_job(service, kubectl)
-      elsif service.web_service?
-        apply_deployment(service, kubectl)
-        apply_service(service, kubectl)
-        apply_ingress(service, kubectl)
-      end
-    end
+    deploy_services(project, kubectl)
 
     deployment.completed!
   rescue StandardError => e
@@ -30,24 +19,36 @@ class Projects::DeploymentJob < ApplicationJob
     deployment.failed!
   end
 
-  def apply_deployment(service, kubectl)
-    deployment_yaml = K8::Stateless::Deployment.new(service).to_yaml
-    kubectl.apply_yaml(deployment_yaml)
+  private
+
+  def create_kubectl(deployment, kubeconfig)
+    runner = Cli::RunAndLog.new(deployment)
+    K8::Kubectl.new(kubeconfig, runner)
   end
 
-  def apply_cron_job(service, kubectl)
-    cron_job_yaml = K8::Stateless::CronJob.new(service).to_yaml
-    kubectl.apply_yaml(cron_job_yaml)
+  def deploy_services(project, kubectl)
+    project.services.each do |service|
+      deploy_service(service, kubectl)
+    end
   end
 
-  def apply_service(service, kubectl)
-    service_yaml = K8::Stateless::Service.new(service).to_yaml
-    kubectl.apply_yaml(service_yaml)
+  def deploy_service(service, kubectl)
+    if service.background_service?
+      apply_deployment(service, kubectl)
+    elsif service.cron_job?
+      apply_cron_job(service, kubectl)
+    elsif service.web_service?
+      apply_deployment(service, kubectl)
+      apply_service(service, kubectl)
+      apply_ingress(service, kubectl)
+    end
   end
 
-  def apply_ingress(service, kubectl)
-    ingress_yaml = K8::Stateless::Ingress.new(service).to_yaml
-    kubectl.apply_yaml(ingress_yaml)
+  %w[Deployment CronJob Service Ingress].each do |resource_type|
+    define_method(:"apply_#{resource_type.underscore}") do |service, kubectl|
+      resource_yaml = K8::Stateless.const_get(resource_type).new(service).to_yaml
+      kubectl.apply_yaml(resource_yaml)
+    end
   end
 
   def upload_registry_secrets(kubectl, deployment)

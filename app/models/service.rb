@@ -23,7 +23,7 @@ class Service < ApplicationRecord
   enum service_type: {
     web_service: 0,
     background_service: 1,
-    cron_job: 2,
+    cron_job: 2
   }
   has_one :cron_schedule
   validates :cron_schedule, presence: true, if: :cron_job?
