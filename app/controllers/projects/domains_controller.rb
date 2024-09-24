@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Projects::DomainsController < Projects::BaseController
   before_action :set_project
 
@@ -21,9 +23,7 @@ class Projects::DomainsController < Projects::BaseController
     @domain = @project.domains.find(params[:id])
     @domain.destroy
 
-    respond_to do |format|
-      format.turbo_stream
-    end
+    respond_to(&:turbo_stream)
   end
 
   private
