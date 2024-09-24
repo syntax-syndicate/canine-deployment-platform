@@ -4,8 +4,8 @@ class K8::Stateless::Deployment < K8::Base
   def initialize(service)
     @service = service
     @project = service.project
-    @name = project.name
+    @name = @project.name
     @port = 3000
-    @environment_variables = project.environment_variables
+    @environment_variables = @project.environment_variables
   end
 end

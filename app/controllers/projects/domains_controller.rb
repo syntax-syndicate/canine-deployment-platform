@@ -2,18 +2,18 @@ class Projects::DomainsController < Projects::BaseController
   before_action :set_project
 
   def create
-    @domain = @project.domains.new(domain_params)
+    # TODO(chris): This is a bit of a hack, we should probably refactor this
+    @domain = @project.services.web_service.first.domains.new(domain_params)
     respond_to do |format|
       if @domain.save
         Projects::AddDomainJob.perform_later(@domain.cluster)
         format.html { redirect_to project_path(@project), notice: 'Domain was successfully added.' }
         format.json { render :show, status: :created, domain: @domain }
-        format.turbo_stream
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @domain.errors, status: :unprocessable_entity }
-        format.turbo_stream
       end
+      format.turbo_stream
     end
   end
 
@@ -27,6 +27,7 @@ class Projects::DomainsController < Projects::BaseController
   end
 
   private
+
   def domain_params
     params.require(:domain).permit(:domain_name)
   end

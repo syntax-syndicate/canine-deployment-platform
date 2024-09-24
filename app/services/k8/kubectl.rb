@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class K8::Kubectl
   include K8::Kubeconfig
   attr_reader :kubeconfig, :runner
@@ -20,7 +22,7 @@ class K8::Kubectl
 
         # Apply the YAML file to the cluster using the kubeconfig file
         command = "kubectl --kubeconfig=#{kubeconfig_file.path} apply -f #{yaml_file.path}"
-        runner.(command)
+        runner.call(command)
       end
     end
   end
@@ -28,7 +30,7 @@ class K8::Kubectl
   def call(command)
     with_kube_config do |kubeconfig_file|
       full_command = "kubectl --kubeconfig=#{kubeconfig_file.path} #{command}"
-      runner.(full_command)
+      runner.call(full_command)
     end
   end
 end
