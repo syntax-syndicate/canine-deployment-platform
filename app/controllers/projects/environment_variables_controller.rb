@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Projects::EnvironmentVariablesController < Projects::BaseController
   before_action :set_project
 
@@ -6,16 +8,19 @@ class Projects::EnvironmentVariablesController < Projects::BaseController
   end
 
   def create
-    result = EnvironmentVariables::BulkUpdate.execute(project: @project, params: params)
+    EnvironmentVariables::BulkUpdate.execute(project: @project, params:)
     if @project.current_deployment.present?
       Projects::DeploymentJob.perform_later(@project.current_deployment)
-      redirect_to project_environment_variables_path(@project), notice: 'Deployment started to apply new environment variables.'
+      redirect_to project_environment_variables_path(@project),
+                  notice: 'Deployment started to apply new environment variables.'
     else
-      redirect_to project_environment_variables_path(@project), notice: 'Environment variables will be applied on the next deployment.'
+      redirect_to project_environment_variables_path(@project),
+                  notice: 'Environment variables will be applied on the next deployment.'
     end
   end
 
   private
+
   def environment_variable_params
     params.require(:environment_variable).permit(:name, :value)
   end

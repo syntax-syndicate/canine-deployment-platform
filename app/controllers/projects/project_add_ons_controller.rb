@@ -1,11 +1,8 @@
 class Projects::ProjectAddOnsController < Projects::BaseController
-  before_action :set_project_add_on, only: [:show, :edit, :update, :destroy]
+  before_action :set_project_add_on, only: %i[show edit update destroy]
 
   def index
     @project_add_ons = @project.project_add_ons
-  end
-
-  def show
   end
 
   def new
@@ -16,18 +13,17 @@ class Projects::ProjectAddOnsController < Projects::BaseController
     @project_add_on = @project.project_add_ons.build(project_add_on_params)
 
     if @project_add_on.save
-      redirect_to project_project_add_on_path(@project, @project_add_on), notice: 'Project add-on was successfully created.'
+      redirect_to project_project_add_on_path(@project, @project_add_on),
+                  notice: 'Project add-on was successfully created.'
     else
       render :new
     end
   end
 
-  def edit
-  end
-
   def update
     if @project_add_on.update(project_add_on_params)
-      redirect_to project_project_add_on_path(@project, @project_add_on), notice: 'Project add-on was successfully updated.'
+      redirect_to project_project_add_on_path(@project, @project_add_on),
+                  notice: 'Project add-on was successfully updated.'
     else
       render :edit
     end
@@ -39,6 +35,7 @@ class Projects::ProjectAddOnsController < Projects::BaseController
   end
 
   private
+
   def set_project_add_on
     @project_add_on = @project.project_add_ons.find(params[:id])
   end

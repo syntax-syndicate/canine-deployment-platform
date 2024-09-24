@@ -5,16 +5,16 @@ Rails.application.routes.draw do
   end
   resources :add_ons do
     member do
-      get :logs, to: "add_ons#logs"
+      get :logs, to: 'add_ons#logs'
     end
   end
   resources :projects do
-    resources :services, only: [:index, :new, :create, :destroy], module: :projects
+    resources :services, only: %i[index new create destroy], module: :projects
     resources :metrics, only: [:index], module: :projects
-    resources :project_add_ons, only: [:create, :destroy], module: :projects
-    resources :environment_variables, only: [:index, :create], module: :projects
-    resources :domains, only: [:create, :destroy], module: :projects
-    resources :deployments, only: [:index, :show], module: :projects do
+    resources :project_add_ons, only: %i[create destroy], module: :projects
+    resources :environment_variables, only: %i[index create], module: :projects
+    resources :domains, only: %i[create destroy], module: :projects
+    resources :deployments, only: %i[index show], module: :projects do
       collection do
         post :deploy
       end
@@ -40,14 +40,14 @@ Rails.application.routes.draw do
   draw :users
   draw :dev if Rails.env.local?
 
-  authenticated :user, lambda { |u| u.admin? } do
+  authenticated :user, ->(u) { u.admin? } do
     draw :admin
   end
 
-  resources :announcements, only: [:index, :show]
+  resources :announcements, only: %i[index show]
 
   namespace :action_text do
-    resources :embeds, only: [:create], constraints: {id: /[^\/]+/} do
+    resources :embeds, only: [:create], constraints: { id: %r{[^/]+} } do
       collection do
         get :patterns
       end
@@ -61,19 +61,19 @@ Rails.application.routes.draw do
     get :pricing
   end
 
-  match "/404", via: :all, to: "errors#not_found"
-  match "/500", via: :all, to: "errors#internal_server_error"
+  match '/404', via: :all, to: 'errors#not_found'
+  match '/500', via: :all, to: 'errors#internal_server_error'
 
   authenticated :user do
-    root to: "dashboard#show", as: :user_root
+    root to: 'dashboard#show', as: :user_root
     # Alternate route to use if logged in users should still see public root
     # get "/dashboard", to: "dashboard#show", as: :user_root
   end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get "up", to: "rails/health#show", as: :rails_health_check
+  get 'up', to: 'rails/health#show', as: :rails_health_check
 
   # Public marketing homepage
-  root to: "static#index"
+  root to: 'static#index'
 end
