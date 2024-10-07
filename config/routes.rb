@@ -44,7 +44,7 @@ Rails.application.routes.draw do
       get :download_kubeconfig
       get :logs
     end
-    resource :metrics, only: [ :show ], module: :clusters
+    resource :metrics, only: [ :show, :index ], module: :clusters
     member do
       post :test_connection
       post :restart

@@ -5,4 +5,7 @@ class Clusters::MetricsController < Clusters::BaseController
     @pod_metrics = K8::Metrics::Pods.call(@cluster)
     @node_metrics = K8::Metrics::Nodes.call(@cluster)
   end
+
+  def index
+  end
 end
