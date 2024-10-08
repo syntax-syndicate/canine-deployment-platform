@@ -7,7 +7,7 @@ namespace :kube do
       attributes = nodes.flat_map do |node|
         [
           {
-            type: :cpu,
+            metric_type: :cpu,
             tags: [ node[:name] ],
             metadata: {
               cpu_cores: node[:cpu_cores],
@@ -15,7 +15,7 @@ namespace :kube do
             }
           },
           {
-            type: :memory,
+            metric_type: :memory,
             tags: [ node[:name] ],
             metadata: {
               memory_bytes: node[:memory_bytes],
@@ -24,6 +24,8 @@ namespace :kube do
           }
         ]
       end
+
+      cluster.metrics.create(attributes)
     end
   end
 end

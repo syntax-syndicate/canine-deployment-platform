@@ -10,5 +10,6 @@ require("@rails/activestorage").start()
 require("local-time").start()
 require("@rails/ujs").start()
 
+import ApexCharts from "apexcharts"
 import './channels/**/*_channel.js'
 import "./controllers"

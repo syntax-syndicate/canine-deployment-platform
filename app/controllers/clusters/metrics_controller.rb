@@ -7,5 +7,6 @@ class Clusters::MetricsController < Clusters::BaseController
   end
 
   def index
+    @metrics = @cluster.metrics
   end
 end

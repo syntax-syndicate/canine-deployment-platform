@@ -1,4 +1,5 @@
 <%= cluster_layout(@cluster) do %>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.53.0/apexcharts.min.js"></script>
   <table class="table mt-2 rounded-box" id="order_table" data-component="table">
     <thead>
       <tr>
@@ -98,4 +99,163 @@
       <% end %>
     </tbody>
   </table>
+
+<div id="chart_order_syncing_line">
+</div>
+<div id="chart_order_revenue_syncing_line">
+</div>
+
+
+<script>
+const getTheme = () => 'dark' 
+
+let chartOrderSyncingLine = null
+let chartOrderRevenueSyncingLine = null
+
+const monthNames = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+  const xAxisOptions = {
+    type: "datetime",
+    categories: [
+      new Date("1/1/2025").getTime(),
+      new Date("1/2/2025").getTime(),
+      new Date("1/3/2025").getTime(),
+      new Date("1/4/2025").getTime(),
+      new Date("1/5/2025").getTime(),
+      new Date("1/6/2025").getTime(),
+      new Date("1/7/2025").getTime(),
+      new Date("1/8/2025").getTime(),
+      new Date("1/9/2025").getTime(),
+      new Date("1/10/2025").getTime(),
+      new Date("1/11/2025").getTime(),
+      new Date("1/12/2025").getTime(),
+      new Date("1/13/2025").getTime(),
+      new Date("1/14/2025").getTime(),
+      new Date("1/15/2025").getTime(),
+    ],
+    max: new Date("1/15/2025").getTime(),
+  }
+
+const apexChartOptions = (id, series) => ({
+    chart: {
+      events: {
+        mounted: (c) => c.windowResizeHandler(),
+      },
+      type: "line",
+      height: 120,
+      toolbar: {
+        show: true,
+        tools: {
+          download: true,
+          zoom: false,
+          zoomin: false,
+          zoomout: false,
+          pan: false,
+          reset: false,
+        },
+      },
+      background: "transparent",
+      id,
+      group: "metrics",
+    },
+    theme: {
+      mode: getTheme(),
+    },
+    xaxis: xAxisOptions,
+    stroke: {
+      width: 2,
+    },
+    series,
+});
+const initChartSyncingLine = () => {
+  if (!window.ApexCharts) return
+
+  const syncingLineXAxisOption = {
+    type: "datetime",
+    categories: [
+      new Date("1/1/2025").getTime(),
+      new Date("1/2/2025").getTime(),
+      new Date("1/3/2025").getTime(),
+      new Date("1/4/2025").getTime(),
+      new Date("1/5/2025").getTime(),
+      new Date("1/6/2025").getTime(),
+      new Date("1/7/2025").getTime(),
+      new Date("1/8/2025").getTime(),
+      new Date("1/9/2025").getTime(),
+      new Date("1/10/2025").getTime(),
+      new Date("1/11/2025").getTime(),
+      new Date("1/12/2025").getTime(),
+      new Date("1/13/2025").getTime(),
+      new Date("1/14/2025").getTime(),
+      new Date("1/15/2025").getTime(),
+    ],
+    max: new Date("1/15/2025").getTime(),
+  }
+
+  const syncingLineTotalOrders = <%= raw @pod_metrics.map { |x| x[:cpu] } %>
+
+  const syncingLineAverageOrderValue = <%= raw @pod_metrics.map { |x| x[:memory] } %>
+
+  const syncingLineOrdersSeries = [
+      {
+        color: "#3e5eff",
+        name: "Orders",
+        data: syncingLineTotalOrders,
+      },
+    ];
+  const orderOptions = apexChartOptions('order-total', syncingLineOrdersSeries);
+
+  chartOrderSyncingLine = new ApexCharts(
+    document.querySelector("#chart_order_syncing_line"),
+    orderOptions
+  )
+
+  chartOrderSyncingLine.render()
+  const revenueSeries = [
+      {
+        color: "#FFC700",
+        name: "Revenue",
+        data: syncingLineTotalOrders.map((cur, index) =>
+          Number((cur * syncingLineAverageOrderValue[index]).toFixed(2))
+        ),
+      },
+    ]
+  const orderRevenueOptions = apexChartOptions('order-revenue', revenueSeries);
+  orderRevenueOptions.yaxis = {
+    labels: {
+      formatter: (val) => (val / 1000).toFixed(0) + "K",
+    },
+  }
+
+  chartOrderRevenueSyncingLine = new ApexCharts(
+    document.querySelector("#chart_order_revenue_syncing_line"),
+    orderRevenueOptions
+  )
+
+  chartOrderRevenueSyncingLine.render()
+}
+const initCharts = () => {
+  initChartSyncingLine()
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  initCharts()
+})
+
+
+</script>
+
 <% end %>

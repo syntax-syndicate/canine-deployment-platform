@@ -144,7 +144,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_07_210757) do
   end
 
   create_table "metrics", force: :cascade do |t|
-    t.integer "type", default: 0, null: false
+    t.integer "metric_type", default: 0, null: false
     t.jsonb "metadata", default: {}, null: false
     t.jsonb "tags", default: [], null: false, array: true
     t.bigint "cluster_id", null: false
