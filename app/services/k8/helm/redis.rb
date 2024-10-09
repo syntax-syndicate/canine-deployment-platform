@@ -1,6 +1,11 @@
 class K8::Helm::Redis < K8::Helm::Service
+  def name
+    "redis"
+  end
+
   def service_name
-    "#{add_on.name}-redis-master"
+    basename = add_on.name.ends_with?("redis") ? add_on.name : "#{add_on.name}-redis"
+    "#{basename}-master"
   end
 
   def internal_url

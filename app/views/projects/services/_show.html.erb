@@ -8,16 +8,25 @@
       <%= form.label :command %>
       <%= form.text_field :command, class: "input input-bordered", required: false %>
     </div>
+    <% if service.cron_job? %>
+      <div class="form-group">
+        <%= form.fields_for :cron_schedule do |cron_schedule_form| %>
+          <%= cron_schedule_form.label :schedule %>
+          <%= cron_schedule_form.text_field :schedule, class: "input input-bordered", placeholder: "0 0 * * *", value: service.cron_schedule.schedule %>
+        <% end %>
+      </div>
+    <% end %>
+    <% if service.web_service? %>
+      <div class="form-group">
+        <%= form.label :container_port %>
+        <%= form.text_field :container_port, class: "input input-bordered", required: false %>
+      </div>
+    <% end %>
+    <%= form.submit class: "btn btn-primary" %>
   <% end %>
   <% if service.web_service? %>
     <div class="my-8">
       <h2 class="text-lg my-2">Networking</h2>
-      <%= form_with(model: [service.project, service], url: project_services_path) do |form| %>
-        <div class="form-group">
-          <%= form.label :container_port %>
-          <%= form.text_field :container_port, class: "input input-bordered", required: false %>
-        </div>
-      <% end %>
 
       <div class="form-group">
         <%= render "projects/services/domains/index", service: service %>

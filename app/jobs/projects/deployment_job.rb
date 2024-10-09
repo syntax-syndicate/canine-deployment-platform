@@ -7,22 +7,31 @@ class Projects::DeploymentJob < ApplicationJob
   def perform(deployment)
     project = deployment.project
     kubeconfig = project.cluster.kubeconfig
-    predeploy(project, deployment)
     kubectl = create_kubectl(deployment, kubeconfig)
 
     # Upload container registry secrets
     upload_registry_secrets(kubectl, deployment)
 
+    # Create namespace
+    create_namespace(project, kubectl)
+
+    predeploy(project, deployment)
     # For each of the projects services
     deploy_services(project, kubectl)
 
     deployment.completed!
+    project.deployed!
   rescue StandardError => e
     deployment.info "Deployment failed: #{e.message}"
     deployment.failed!
   end
 
   private
+
+  def create_namespace(project, kubectl)
+    namespace_yaml = K8::Namespace.new(project).to_yaml
+    kubectl.apply_yaml(namespace_yaml)
+  end
 
   def predeploy(project, deployment)
     return unless project.predeploy_command.present?
