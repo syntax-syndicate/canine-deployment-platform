@@ -11,6 +11,7 @@ class K8::Metrics::Nodes
 
   def self.parse_output(output)
     data = JSON.parse(output)
+    binding.pry
     data["items"].map do |node|
       {
         name: node.dig("metadata", "name"),
