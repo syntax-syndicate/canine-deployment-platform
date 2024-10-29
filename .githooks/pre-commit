@@ -31,7 +31,7 @@ if [ -z "$NEW_TODOS" ]; then
 fi
 
 # Append NEW_TODOS to README.md under a TODO section
-README_TODO_SECTION="## TODOs"
+README_TODO_SECTION="## TODO"
 
 # Check if the README already has a TODO section
 if grep -q "$README_TODO_SECTION" README.md; then

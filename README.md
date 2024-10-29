@@ -49,7 +49,3 @@ bin/dev
 * I want a way to “stop” the processes, can maybe do this with a replicas=0 setting
 * Rebulid metrics tabs so it works for both clusters & pods
   https://overcast.blog/zero-downtime-deployments-with-kubernetes-a-full-guide-71019397b924?gi=95ab85c45634
-
-## TODOs
-+  # TODO: new todo test
-
