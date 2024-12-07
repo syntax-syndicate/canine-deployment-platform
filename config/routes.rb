@@ -93,6 +93,7 @@ Rails.application.routes.draw do
   if Rails.application.config.local_mode
     get "/github_token", to: "local/pages#github_token"
     put "/github_token", to: "local/pages#update_github_token"
+    get "/onboarding", to: "local/pages#onboarding"
     root to: "projects#index"
   else
     root to: "static#index"

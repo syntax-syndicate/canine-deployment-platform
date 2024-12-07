@@ -4,6 +4,9 @@ class Local::PagesController < ApplicationController
     skip_before_action :set_github_token_if_not_exists
   end
 
+  def onboarding
+  end
+
   def github_token
   end
 
