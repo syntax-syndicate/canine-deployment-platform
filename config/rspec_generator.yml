@@ -1,0 +1,5 @@
+project_description: "Canine is a platformm that makes Kubernetes as easy to use as Heroku"
+starting_points:
+  - app/controllers/**/*.rb
+  - app/models/**/*.rb
+overwrite_existing_specs: false  # Optional, defaults to false
