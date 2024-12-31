@@ -22,7 +22,6 @@ def spec_path(original_path)
   Rails.root.join(original_path.sub(/^app/, 'spec').sub(/\.rb$/, '_spec.rb'))
 end
 
-
 def load_config(config_path)
   config = YAML.load_file(config_path)
   validate_config(config)
@@ -38,6 +37,8 @@ end
 namespace :spec do
   desc 'Generate RSpec tests based on YAML configuration'
   task :generate, [:config_path] => :environment do |_, args|
+    Langchain.logger.level = Logger::WARN
+
     unless args.config_path
       puts "Usage: rake spec:generate[path/to/config.yml]"
       exit 1
@@ -65,8 +66,6 @@ class RspecGenerator
     @starting_file = starting_file
     @visited_files = Set.new
     @code_blocks = []
-    @parser = Parser::CurrentRuby.new
-    @parser.diagnostics.consumer = lambda { |diagnostic| }
     @config = config
   end
 
@@ -92,16 +91,18 @@ class RspecGenerator
       content: content
     }
 
+    parser = Parser::CurrentRuby.new
+    parser.diagnostics.consumer = lambda { |diagnostic| }
     buffer = Parser::Source::Buffer.new(file_path.to_s)
     buffer.source = content
-    ast = @parser.parse(buffer)
+    ast = parser.parse(buffer)
 
     collector = ReferenceCollector.new
     collector.process(ast)
     
     collector.references.to_a
   rescue Parser::SyntaxError => e
-    Rails.logger.warn "Syntax error in #{file_path}: #{e.message}"
+    puts "Syntax error in #{file_path}: #{e.message}"
     []
   end
 
@@ -143,7 +144,6 @@ class RspecGenerator
   end
 
   def generate_specs(code_blocks)
-    debugger
     prompt = <<~PROMPT
       Project Description: #{@config['project_description']}
 
@@ -164,7 +164,8 @@ class RspecGenerator
     PROMPT
     puts "Generated prompt length: #{prompt.length}"
 
-    return extract_ruby_code(call_llm_api(prompt))
+    #return code_blocks.pluck(:path).join("\n")
+    return extract_ruby_code(call_llm_api(SYSTEM_PROMPT, prompt))
   end
 
   def extract_ruby_code(snippet)
@@ -178,17 +179,18 @@ class RspecGenerator
 
   public
 
-  def call_llm_api(prompt)
+  def call_llm_api(system_prompt, prompt)
     # TODO: Implement actual LLM API call
     "TODO: Implement LLM API integration"
     ENV['OPENAI_API_KEY']
+
     llm = Langchain::LLM::OpenAI.new(
       api_key: ENV["OPENAI_API_KEY"],
       default_options: { temperature: 0.7, chat_model: "gpt-4o" }
     )
 
     messages = [
-      { role: "system", content: SYSTEM_PROMPT },
+      { role: "system", content: system_prompt },
       { role: "user", content: prompt }
     ]
 
@@ -196,7 +198,47 @@ class RspecGenerator
     response.chat_completion
  end
 
+  def load_factories!
+    # Remove all files that start with application_*
+    relevant_blocks = @code_blocks.reject { |block| File.basename(block[:path]).start_with?('application_') }
+    relevant_blocks.each do |block|
+      if block[:path].start_with?('app/models')
+        factory_path = block[:path].sub('app/models', 'spec/factories').sub(/\.rb$/, '.rb')
+        puts "Loading factory for #{block[:path]}"
+        unless File.exist?(factory_path)
+          puts "Factory not found, generating..."
+          create_factory_with_llm(block)
+        end
+
+        factory_content = File.read(factory_path)
+        @code_blocks << {
+          path: factory_path,
+          content: factory_content
+        }
+        puts "Loaded factory: #{factory_path}"
+      end
+    end
+  end
+
+  def create_factory_with_llm(block)
+    prompt = <<~PROMPT
+      Create a factorybot factory for the model at #{block[:path]}. Try to imagine some common scenarios for the model and build a well rounded factory.
+
+      Here is the source code for the model:
+      ```ruby
+      #{block[:content]}
+      ```
+    PROMPT
+
+    response = extract_ruby_code(call_llm_api(SYSTEM_PROMPT, prompt))
+    factory_path = block[:path].sub('app/models', 'spec/factories').sub(/\.rb$/, '.rb')
+    FileUtils.mkdir_p(File.dirname(factory_path))
+    File.write(factory_path, response)
+    puts "Generated factory: #{factory_path}"
+  end
+
   def run
+    puts "Generating specs for #{@starting_file}"
     compile_file(@starting_file)
     if @code_blocks.empty?
       puts "No source files found for the given starting points"
@@ -207,6 +249,9 @@ class RspecGenerator
     @code_blocks.each do |block|
       puts "- #{block[:path]}"
     end
+
+    # Add factories to code blocks
+    load_factories!
 
     spec_content = generate_specs(@code_blocks)
 
@@ -219,7 +264,6 @@ class ReferenceCollector
 
   def initialize
     @references = Set.new
-    puts "Initialized ReferenceCollector"  # Debugging output
     super
   end
 
@@ -229,7 +273,7 @@ class ReferenceCollector
     if ast.type == :const
       # Extract the full constant name
       full_const_name = extract_full_const_name(ast)
-      @references.add(full_const_name)
+      add_const_names(full_const_name)
     end
 
     # Recursively process each child node
@@ -247,5 +291,13 @@ class ReferenceCollector
     # Recursive case: prepend the parent constant name
     parent_name = extract_full_const_name(node.children.first)
     "#{parent_name}::#{node.children.last}"
+  end
+
+  def add_const_names(full_const_name)
+    # Split the full constant name and add each part to the references
+    parts = full_const_name.split('::')
+    parts.each_with_index do |_, index|
+      @references.add(parts[0..index].join('::'))
+    end
   end
 end

@@ -1,3 +1,3 @@
 project_description: "Canine is a platformm that makes Kubernetes as easy to use as Heroku"
 starting_points:
-  - app/actions/**/*.rb
+  - app/actions/services/create.rb
