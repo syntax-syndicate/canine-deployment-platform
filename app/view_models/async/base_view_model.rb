@@ -31,4 +31,24 @@ class Async::BaseViewModel
       end
     end
   end
+
+  def render(partial_name, locals: {})
+    helper_methods = self.class.helper_methods.map { |method| [method, self.method(method)] }.to_h
+    locals = locals.merge(helper_methods)
+    ApplicationController.renderer.render(
+      partial: partial_name,
+      locals: locals,
+    )
+  end
+
+  def self.helper_method(*methods)
+    methods.each do |method|
+      @helper_methods ||= []
+      @helper_methods << method
+    end
+  end
+
+  def self.helper_methods
+    @helper_methods || []
+  end
 end
