@@ -44,17 +44,16 @@ module Canine
     config.good_job.cron = {
       fetch_metrics_job: {
         cron: "*/15 * * * *",
-        class: "Scheduled::FetchMetricsJob",
+        class: "Scheduled::FetchMetricsJob"
       },
       flush_metrics_job: {
         cron: "0 0 * * *",
-        class: "Scheduled::FlushMetricsJob",
+        class: "Scheduled::FlushMetricsJob"
       },
       check_health_job: {
         cron: "0 0 * * *",
-        class: "Scheduled::CheckHealthJob",
-      },
+        class: "Scheduled::CheckHealthJob"
+      }
     }
-
   end
 end
