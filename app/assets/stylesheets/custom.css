@@ -1,5 +1,5 @@
 .help-text {
-  @apply text-sm text-base-content/80 italic;
+  @apply text-sm text-gray-500 italic;
 }
 
 @keyframes click-animation {
