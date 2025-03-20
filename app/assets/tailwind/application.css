@@ -2,12 +2,11 @@
 
 @import 'tippy.js/dist/tippy.css' layer(utilities);
 @import 'tippy.js/themes/light.css' layer(utilities);
-@import 'components/nav' layer(utilities);
-@import './forms.css' layer(utilities);
-@import './weird_fixes.css' layer(utilities);
-@import './tables.css' layer(utilities);
-@import 'pacman.css' layer(utilities);
-@import 'custom.css' layer(utilities);
+@import '../stylesheets/components/nav.css' layer(utilities);
+@import '../stylesheets/forms.css' layer(utilities);
+@import '../stylesheets/weird_fixes.css' layer(utilities);
+@import '../stylesheets/tables.css' layer(utilities);
+@import '../stylesheets/pacman.css' layer(utilities);
 
 @config '../../../config/tailwind.config.js';
 
