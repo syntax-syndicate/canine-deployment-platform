@@ -5,16 +5,16 @@
   </head>
 
    <body data-controller="theme" data-theme-preference-value="dark">
-    <div class="size-full">
+    <div class="size-full" id="layout-main">
       <div class="flex">
         <%= render 'layouts/sidebar' %>
         <div class="leftbar-backdrop"></div>
-        <main class="main-wrapper overflow-x-hidden overflow-y-auto">
+        <main class="flex h-screen min-w-0 grow flex-col overflow-auto">
           <div class="flex h-full flex-col">
             <%= render 'shared/navbar' %>
             <%= render 'shared/notices' %>
 
-            <div class="content-wrapper">
+            <div class="content-wrapper" id="layout-content">
               <%= yield %>
             </div>
           </div>

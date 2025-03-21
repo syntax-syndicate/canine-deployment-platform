@@ -27,7 +27,7 @@
     "chartkick": "^5.0.1",
     "chokidar": "^4.0.1",
     "clipboard": "^2.0.11",
-    "daisyui": "^4.12.10",
+    "daisyui": "^5.0.6",
     "esbuild-rails": "^1.0.7",
     "flatpickr": "^4.6.10",
     "js-cookie": "^3.0.1",

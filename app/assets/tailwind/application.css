@@ -1,5 +1,7 @@
 @import 'tailwindcss';
+@plugin "daisyui";
 
+@import "../stylesheets/app.css" layer(utilities);
 @import 'tippy.js/dist/tippy.css' layer(utilities);
 @import 'tippy.js/themes/light.css' layer(utilities);
 @import '../stylesheets/components/nav.css' layer(utilities);
@@ -7,6 +9,7 @@
 @import '../stylesheets/weird_fixes.css' layer(utilities);
 @import '../stylesheets/tables.css' layer(utilities);
 @import '../stylesheets/pacman.css' layer(utilities);
+@import '../stylesheets/custom.css' layer(utilities);
 
 @config '../../../config/tailwind.config.js';
 

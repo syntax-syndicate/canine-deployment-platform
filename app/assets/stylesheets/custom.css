@@ -77,3 +77,6 @@
 .max-w-9xl {
   max-width: 96rem;
 }
+.menu {
+  @apply w-full;
+}
