@@ -36,7 +36,8 @@ gem "bootsnap", require: false
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
+  gem "debug", platforms: %i[ mri windows ]
+  gem "simplecov", require: false
   gem "pry", "~> 0.14.2"
   gem "rspec-rails", "~> 7.1"
   gem "factory_bot_rails"
@@ -67,7 +68,7 @@ gem "devise", "~> 4.9"
 gem "friendly_id", "~> 5.4"
 gem "jsbundling-rails"
 gem "name_of_person", github: "basecamp/name_of_person"
-gem "noticed", "~> 2.0"
+gem "noticed", "~> 2.6"
 gem "omniauth-github", "~> 2.0"
 gem "pretender", "~> 0.3.4"
 gem "pundit", "~> 2.1"
@@ -100,10 +101,6 @@ gem "httparty", "~> 0.22.0"
 gem "redcarpet", "~> 3.6"
 
 gem "rubyzip", "~> 2.3"
-
-gem "chartkick", "~> 5.1"
-
-gem "groupdate", "~> 6.5"
 
 gem "sassc-rails", "~> 2.1"
 
