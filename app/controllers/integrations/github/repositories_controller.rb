@@ -1,7 +1,7 @@
 class Integrations::Github::RepositoriesController < ApplicationController
   def index
     # Preference the github provider
-    provider = current_user.providers.where(provider: [Provider::GITHUB_PROVIDER, Provider::GITHUB_APP_PROVIDER]).first
+    provider = current_user.providers.where(provider: [ Provider::GITHUB_PROVIDER, Provider::GITHUB_APP_PROVIDER ]).first
 
     client = Octokit::Client.new(bearer_token: provider.access_token)
 

@@ -157,4 +157,4 @@ RSpec.describe Providers::CreateOrUpdateGithubAppProvider do
       end
     end
   end
-end 
+end

@@ -19,7 +19,7 @@ class Providers::CreateOrUpdateGithubAppProvider
       access_token: context.installation_id,
       auth: {
         info: {
-          username: installation.account.login,
+          username: installation.account.login
         },
         installation_id: context.installation_id
       }.to_json
