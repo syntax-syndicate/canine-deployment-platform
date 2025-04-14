@@ -8,7 +8,7 @@ module InboundWebhooks
       signed_id = params[:state]
       user = GlobalID::Locator.locate_signed(signed_id)
       raise StandardError, "User not found" unless user.present?
-      Providers::CreateGithubAppProvider.execute(
+      Providers::CreateOrUpdateGithubAppProvider.execute(
         current_user: user,
         installation_id: params[:installation_id],
       )

@@ -43,6 +43,7 @@ class ProjectsController < ApplicationController
   # POST /projects or /projects.json
   def create
     result = Projects::Create.call(params, current_user)
+    debugger
 
     @project = result.project
     respond_to do |format|
@@ -97,7 +98,11 @@ class ProjectsController < ApplicationController
 
   def set_provider
     @selected_provider = params[:provider] || Provider::GITHUB_PROVIDER
-    @providers = current_user.providers.where(provider: @selected_provider)
+    if @selected_provider == Provider::GITHUB_PROVIDER
+      @providers = current_user.providers.where(provider: [Provider::GITHUB_PROVIDER, Provider::GITHUB_APP_PROVIDER])
+    else
+      @providers = current_user.providers.where(provider: @selected_provider)
+    end
     # Temporary hack
     @provider = @providers.first
   end

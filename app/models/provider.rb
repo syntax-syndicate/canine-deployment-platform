@@ -82,6 +82,19 @@ class Provider < ApplicationRecord
     provider == GITHUB_APP_PROVIDER
   end
 
+  def access_token
+    if github_app?
+      @_app_client ||= Github::App::Client.create_client_for_installation(JSON.parse(auth)["installation_id"])
+      @_app_client.bearer_token
+    else
+      super
+    end
+  end
+
+  def github_app?
+    provider == GITHUB_APP_PROVIDER
+  end
+
   def twitter_refresh_token!(token); end
 
   def used!

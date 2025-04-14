@@ -47,6 +47,6 @@ class Github::App::Client
   end
 
   def private_key
-    OpenSSL::PKey::RSA.new(GITHUB_APP_PEM)
+    OpenSSL::PKey::RSA.new(GITHUB_APP_PEM.split('\n').join("\n"))
   end
 end
