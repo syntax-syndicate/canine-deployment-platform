@@ -132,4 +132,8 @@ class Project < ApplicationRecord
       "docker.io/#{container_registry}:latest"
     end
   end
+
+  def most_recent_running_build
+    builds.where(status: :in_progress).order(created_at: :desc).first
+  end
 end

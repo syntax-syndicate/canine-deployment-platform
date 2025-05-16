@@ -75,7 +75,13 @@ class Projects::BuildJob < ApplicationJob
     runner = Cli::RunAndLog.new(build)
 
     # Call the runner with the command (joined as a string since RunAndLog expects a string)
-    exit_status = runner.call(docker_build_command.join(" "))
+    exit_status = runner.call(docker_build_command.join(" "), poll_every: 1.second) do |wait_thr|
+      # Check if a new build has been started for this project
+      if project.most_recent_running_build&.id != build.id
+        runner  .safely_kill(wait_thr)
+        raise BuildFailure, "New build started for #{project.name} while this build was running"
+      end
+    end
   rescue Cli::CommandFailedError => e
     raise BuildFailure, e.message
   end
