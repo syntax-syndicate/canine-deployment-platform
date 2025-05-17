@@ -32,15 +32,22 @@ module Cli
       command = envs.map { |k, v| "#{k}=#{v}" }.join(" ") + " #{command}"
       Open3.popen3(command.strip) do |stdin, stdout, stderr, wait_thr|
         stdin.close
+
+        if poll_every.present?
+          poll_thread = Thread.new do
+            loop do
+              puts "polling..."
+              sleep(poll_every)
+              block.call(wait_thr.pid)
+            end
+          end
+          trap("INT") { poll_thread&.exit; exit }
+        end
+
         stdout.each_line { |line| @loggable.info(line.chomp) }
         stderr.each_line { |line| @loggable.info(line.chomp) }
 
-        if poll_every.present?
-          loop do
-            sleep(poll_every)
-            block.call(wait_thr)
-          end
-        end
+        poll_thread&.exit
 
         exit_status = wait_thr.value
         if exit_status.success?

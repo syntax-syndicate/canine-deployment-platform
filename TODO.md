@@ -17,3 +17,4 @@
 - [ ] Github filtering across organizations is not working
 - [ ] Explore allowing local PC's on DHCP to be a host
 - [ ] Kill older builds if there is a newer build thats already started
+- [ ] No metrics should be more obvious
